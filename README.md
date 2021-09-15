@@ -7,6 +7,10 @@
 
 This plugin allows Flutter **desktop** apps to Retrieve information about screen size, displays, cursor position, etc.
 
+[![Discord](https://img.shields.io/badge/discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/vba8W9SF)
+
+---
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
@@ -27,7 +31,7 @@ This plugin allows Flutter **desktop** apps to Retrieve information about screen
 
 | Linux | macOS | Windows |
 | :---: | :---: | :-----: |
-|  ➖   |  ✔️   |   ➖    |
+|   ✔️   |   ✔️   |    ➖    |
 
 ## Quick Start
 
@@ -83,9 +87,9 @@ void _init() async {
 
 | Method                 | Description                                                                  | Linux | macOS | Windows |
 | ---------------------- | ---------------------------------------------------------------------------- | ----- | ----- | ------- |
-| `getCursorScreenPoint` | Returns `Offset` - The current absolute position of the mouse pointer.       | ➖    | ✔️    | ➖      |
-| `getPrimaryDisplay`    | Returns `Display` - The primary display.                                     | ➖    | ✔️    | ➖      |
-| `getAllDisplays`       | Returns `List<Display>` - An array of displays that are currently available. | ➖    | ✔️    | ➖      |
+| `getCursorScreenPoint` | Returns `Offset` - The current absolute position of the mouse pointer.       | ✔️     | ✔️     | ➖       |
+| `getPrimaryDisplay`    | Returns `Display` - The primary display.                                     | ✔️     | ✔️     | ➖       |
+| `getAllDisplays`       | Returns `List<Display>` - An array of displays that are currently available. | ✔️     | ✔️     | ➖       |
 
 ## License
 

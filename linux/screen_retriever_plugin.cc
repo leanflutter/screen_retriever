@@ -28,27 +28,73 @@ GtkWindow *get_window(ScreenRetrieverPlugin *self)
   return GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(view)));
 }
 
-GdkWindow *get_gdk_window(ScreenRetrieverPlugin *self)
+FlValue *monitor_to_flvalue(GdkMonitor *monitor)
 {
-  return gtk_widget_get_window(GTK_WIDGET(get_window(self)));
+  GdkRectangle frame;
+  gdk_monitor_get_geometry(monitor, &frame);
+
+  auto size = fl_value_new_map();
+  fl_value_set_string_take(size, "width", fl_value_new_float(frame.width));
+  fl_value_set_string_take(size, "height", fl_value_new_float(frame.height));
+
+  const char *name = gdk_monitor_get_model(monitor);
+  gint scale_factor = gdk_monitor_get_scale_factor(monitor);
+
+  g_autoptr(FlValue) value = fl_value_new_map();
+  fl_value_set_string_take(value, "id", fl_value_new_float(0));
+  fl_value_set_string_take(value, "name", fl_value_new_string(name));
+  fl_value_set_take(value, fl_value_new_string("size"), size);
+  fl_value_set_string_take(value, "scaleFactor", fl_value_new_float(scale_factor));
+
+  return fl_value_ref(value);
 }
 
 static FlMethodResponse *get_cursor_screen_point(ScreenRetrieverPlugin *self,
                                                  FlValue *args)
 {
-  return FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
+  GdkDisplay *display = gdk_display_get_default();
+  GdkSeat *seat = gdk_display_get_default_seat(display);
+  GdkDevice *pointer = gdk_seat_get_pointer(seat);
+
+  int x, y;
+  gdk_device_get_position(pointer, NULL, &x, &y);
+
+  g_autoptr(FlValue) result_data = fl_value_new_map();
+  fl_value_set_string_take(result_data, "x", fl_value_new_float(x));
+  fl_value_set_string_take(result_data, "y", fl_value_new_float(y));
+
+  return FL_METHOD_RESPONSE(fl_method_success_response_new(result_data));
 }
 
 static FlMethodResponse *get_primary_display(ScreenRetrieverPlugin *self,
                                              FlValue *args)
 {
-  return FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
+  GdkDisplay *display = gdk_display_get_default();
+  GdkMonitor *monitor = gdk_display_get_primary_monitor(display);
+
+  g_autoptr(FlValue) result_data = monitor_to_flvalue(monitor);
+
+  return FL_METHOD_RESPONSE(fl_method_success_response_new(result_data));
 }
 
 static FlMethodResponse *get_all_displays(ScreenRetrieverPlugin *self,
                                           FlValue *args)
 {
-  return FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
+
+  auto displays = fl_value_new_list();
+
+  GdkDisplay *display = gdk_display_get_default();
+  gint n_monitors = gdk_display_get_n_monitors(display);
+  for (gint i = 0; i < n_monitors; i++)
+  {
+    GdkMonitor *monitor = gdk_display_get_monitor(display, i);
+    fl_value_append_take(displays, monitor_to_flvalue(monitor));
+  }
+
+  g_autoptr(FlValue) result_data = fl_value_new_map();
+  fl_value_set_take(result_data, fl_value_new_string("displays"), displays);
+
+  return FL_METHOD_RESPONSE(fl_method_success_response_new(result_data));
 }
 
 // Called when a method call is received from Flutter.

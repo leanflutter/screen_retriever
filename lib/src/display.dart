@@ -3,14 +3,15 @@ import 'dart:ui';
 class Display {
   // Unique identifier associated with the display.
   num id;
-  // display name
   String name;
   Size size;
+  num? scaleFactor;
 
   Display({
     required this.id,
     required this.name,
     required this.size,
+    this.scaleFactor,
   });
 
   factory Display.fromJson(Map<String, dynamic> json) {
@@ -21,6 +22,7 @@ class Display {
         json['size']['width'],
         json['size']['height'],
       ),
+      scaleFactor: json.containsKey('scaleFactor') ? json['scaleFactor'] : null,
     );
   }
 
@@ -32,6 +34,7 @@ class Display {
         'width': size.width,
         'height': size.height,
       },
+      'scaleFactor': scaleFactor,
     };
   }
 }
