@@ -31,7 +31,7 @@ This plugin allows Flutter **desktop** apps to Retrieve information about screen
 
 | Linux | macOS | Windows |
 | :---: | :---: | :-----: |
-|   ✔️   |   ✔️   |    ➖    |
+|   ✔️   |   ✔️   |    ✔️    |
 
 ## Quick Start
 
@@ -87,9 +87,9 @@ void _init() async {
 
 | Method                 | Description                                                                  | Linux | macOS | Windows |
 | ---------------------- | ---------------------------------------------------------------------------- | ----- | ----- | ------- |
-| `getCursorScreenPoint` | Returns `Offset` - The current absolute position of the mouse pointer.       | ✔️     | ✔️     | ➖       |
-| `getPrimaryDisplay`    | Returns `Display` - The primary display.                                     | ✔️     | ✔️     | ➖       |
-| `getAllDisplays`       | Returns `List<Display>` - An array of displays that are currently available. | ✔️     | ✔️     | ➖       |
+| `getCursorScreenPoint` | Returns `Offset` - The current absolute position of the mouse pointer.       | ✔️     | ✔️     | ✔️       |
+| `getPrimaryDisplay`    | Returns `Display` - The primary display.                                     | ✔️     | ✔️     | ✔️       |
+| `getAllDisplays`       | Returns `List<Display>` - An array of displays that are currently available. | ✔️     | ✔️     | ✔️       |
 
 ## License
 
