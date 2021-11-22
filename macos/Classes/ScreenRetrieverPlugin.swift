@@ -41,9 +41,13 @@ public class ScreenRetrieverPlugin: NSObject, FlutterPlugin {
             "height": screen.frame.height,
         ]
         
+        var name: String = "";
+        if #available(macOS 10.15, *) {
+            name = screen.localizedName
+        }
         let dict: NSDictionary = [
             "id": screen.displayID,
-            "name": screen.localizedName,
+            "name": name,
             "size": size,
         ]
         return dict;

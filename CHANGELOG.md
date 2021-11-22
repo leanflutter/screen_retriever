@@ -1,3 +1,7 @@
+## 0.1.0
+
+- Support macOS Mojave.
+
 ## 0.0.2
 
 - Support windows platform.
