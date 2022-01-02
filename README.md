@@ -1,13 +1,18 @@
 # screen_retriever
 
-[![pub version][pub-image]][pub-url]
+[![pub version][pub-image]][pub-url] [![][discord-image]][discord-url]
 
 [pub-image]: https://img.shields.io/pub/v/screen_retriever.svg
 [pub-url]: https://pub.dev/packages/screen_retriever
 
+[discord-image]: https://img.shields.io/discord/884679008049037342.svg
+[discord-url]: https://discord.gg/zPa6EZ2jqb
+
 This plugin allows Flutter **desktop** apps to Retrieve information about screen size, displays, cursor position, etc.
 
-[![Discord](https://img.shields.io/badge/discord-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/zPa6EZ2jqb)
+---
+
+English | [简体中文](./README-ZH.md)
 
 ---
 
@@ -20,7 +25,6 @@ This plugin allows Flutter **desktop** apps to Retrieve information about screen
     - [Installation](#installation)
     - [Usage](#usage)
   - [Who's using it?](#whos-using-it)
-  - [Discussion](#discussion)
   - [API](#api)
     - [ScreenRetriever](#screenretriever)
   - [License](#license)
@@ -71,15 +75,7 @@ void _init() async {
 
 ## Who's using it?
 
-- [Biyi (比译)](https://biyidev.com/) - A convenient translation and dictionary app written in dart / Flutter.
-
-## Discussion
-
-> Welcome to join the discussion group to share your suggestions and ideas with me.
-
-- WeChat Group 请添加我的微信 `lijy91`，并备注 `LeanFlutter`
-- [QQ Group](https://jq.qq.com/?_wv=1027&k=e3kwRnnw)
-- [Telegram Group](https://t.me/leanflutter)
+- [Biyi (比译)](https://biyidev.com/) - A convenient translation and dictionary app.
 
 ## API
 
