@@ -8,7 +8,7 @@
 [discord-image]: https://img.shields.io/discord/884679008049037342.svg
 [discord-url]: https://discord.gg/zPa6EZ2jqb
 
-这个插件允许 Flutter **桌面** 应用检索关于屏幕大小，显示，光标位置等信息。
+这个插件允许 Flutter 桌面应用检索关于屏幕大小，显示，光标位置等信息。
 
 ---
 

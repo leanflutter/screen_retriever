@@ -8,7 +8,7 @@
 [discord-image]: https://img.shields.io/discord/884679008049037342.svg
 [discord-url]: https://discord.gg/zPa6EZ2jqb
 
-This plugin allows Flutter **desktop** apps to Retrieve information about screen size, displays, cursor position, etc.
+This plugin allows Flutter desktop apps to Retrieve information about screen size, displays, cursor position, etc.
 
 ---
 
