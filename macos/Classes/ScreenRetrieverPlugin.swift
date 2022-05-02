@@ -7,6 +7,20 @@ extension NSScreen {
   }
 }
 
+extension NSRect {
+    var topLeft: CGPoint {
+        set {
+            let screenFrameRect = NSScreen.main!.frame
+            origin.x = newValue.x
+            origin.y = screenFrameRect.height - newValue.y - size.height
+        }
+        get {
+            let screenFrameRect = NSScreen.main!.frame
+            return CGPoint(x: origin.x, y: screenFrameRect.height - origin.y - size.height)
+        }
+    }
+}
+
 public class ScreenRetrieverPlugin: NSObject, FlutterPlugin {
     var registrar: FlutterPluginRegistrar!;
     var channel: FlutterMethodChannel!
@@ -36,19 +50,28 @@ public class ScreenRetrieverPlugin: NSObject, FlutterPlugin {
     }
     
     public func _screenToDict(_ screen: NSScreen) -> NSDictionary {
-        let size: NSDictionary = [
-            "width": screen.frame.width,
-            "height": screen.frame.height,
-        ]
-        
         var name: String = "";
         if #available(macOS 10.15, *) {
             name = screen.localizedName
         }
+        let size: NSDictionary = [
+            "width": screen.frame.width,
+            "height": screen.frame.height,
+        ]
+        let visiblePosition: NSDictionary = [
+            "x": screen.visibleFrame.topLeft.x,
+            "y": screen.visibleFrame.topLeft.y,
+        ]
+        let visibleSize: NSDictionary = [
+            "width": screen.visibleFrame.width,
+            "height": screen.visibleFrame.height,
+        ]
         let dict: NSDictionary = [
             "id": screen.displayID,
             "name": name,
             "size": size,
+            "visiblePosition": visiblePosition,
+            "visibleSize": visibleSize,
         ]
         return dict;
     }

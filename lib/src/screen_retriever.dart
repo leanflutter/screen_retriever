@@ -2,39 +2,31 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:screen_retriever/screen_retriever.dart';
 
-import 'screen_listener.dart';
+// import 'screen_listener.dart';
 
 const kScreenEventDisplayAdded = 'display-added';
 const kScreenEventDisplayRemoved = 'display-removed';
 
 class ScreenRetriever {
-  ScreenRetriever._();
+  ScreenRetriever._() {
+    _channel.setMethodCallHandler(_methodCallHandler);
+  }
 
   /// The shared instance of [ScreenRetriever].
   static final ScreenRetriever instance = ScreenRetriever._();
 
   final MethodChannel _channel = const MethodChannel('screen_retriever');
 
-  bool _inited = false;
-
-  ObserverList<ScreenListener>? _listeners = ObserverList<ScreenListener>();
-
-  void _init() {
-    _channel.setMethodCallHandler(_methodCallHandler);
-    _inited = true;
-  }
+  ObserverList<ScreenListener> _listeners = ObserverList<ScreenListener>();
 
   Future<void> _methodCallHandler(MethodCall call) async {
-    if (_listeners == null) return;
-
     final List<ScreenListener> localListeners =
-        List<ScreenListener>.from(_listeners!);
+        List<ScreenListener>.from(_listeners);
     for (final ScreenListener listener in localListeners) {
-      if (!_listeners!.contains(listener)) {
+      if (!_listeners.contains(listener)) {
         return;
       }
 
@@ -46,19 +38,15 @@ class ScreenRetriever {
   }
 
   bool get hasListeners {
-    return _listeners!.isNotEmpty;
+    return _listeners.isNotEmpty;
   }
 
   void addListener(ScreenListener listener) {
-    if (!_inited) this._init();
-
-    _listeners!.add(listener);
+    _listeners.add(listener);
   }
 
   void removeListener(ScreenListener listener) {
-    if (!_inited) this._init();
-
-    _listeners!.remove(listener);
+    _listeners.remove(listener);
   }
 
   Future<Offset> getCursorScreenPoint() async {
@@ -100,3 +88,5 @@ class ScreenRetriever {
     return displayList;
   }
 }
+
+final screenRetriever = ScreenRetriever.instance;

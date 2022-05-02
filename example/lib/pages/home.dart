@@ -1,5 +1,4 @@
 import 'package:bot_toast/bot_toast.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:preference_list/preference_list.dart';
@@ -72,6 +71,9 @@ class _HomePageState extends State<HomePage> with ScreenListener {
                 PreferenceListItem(
                   title: Text('${display.name}'),
                   summary: Text('DisplayID: ${display.id}'),
+                  onTap: () {
+                    BotToast.showText(text: '${display.toJson()}');
+                  },
                 ),
             ],
           ),
