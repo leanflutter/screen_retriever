@@ -45,7 +45,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  screen_retriever: ^0.1.0
+  screen_retriever: ^0.1.1
 ```
 
 Or
