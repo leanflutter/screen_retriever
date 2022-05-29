@@ -1,3 +1,7 @@
+## 0.1.2
+
+* [windows] Returns the correct `width` and `height`
+
 ## 0.1.1
 
 * Add `visiblePosition`, `visibleSize` fields to `Display` model
