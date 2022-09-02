@@ -90,6 +90,15 @@ static FlMethodResponse* get_primary_display(ScreenRetrieverPlugin* self,
   GdkDisplay* display = gdk_display_get_default();
   GdkMonitor* monitor = gdk_display_get_primary_monitor(display);
 
+  // opt: fallback if there's no primary monitor
+  if (monitor == nullptr) {
+    int monitor_count = gdk_display_get_n_monitors(display);
+    if (monitor_count == 0) {
+      return nullptr;
+    } else {
+      monitor = gdk_display_get_monitor(display, 0);
+    }
+  }
   g_autoptr(FlValue) result_data = monitor_to_flvalue(monitor);
 
   return FL_METHOD_RESPONSE(fl_method_success_response_new(result_data));
