@@ -1,3 +1,7 @@
+## 0.1.3
+
+* [linux] fix: crash when on wayland with no primary monitor #3
+
 ## 0.1.2
 
 * [windows] Returns the correct `width` and `height`
