@@ -1,3 +1,7 @@
+## 0.1.4
+
+* [linux] Fix memory management issues on Linux #4
+
 ## 0.1.3
 
 * [linux] fix: crash when on wayland with no primary monitor #3
