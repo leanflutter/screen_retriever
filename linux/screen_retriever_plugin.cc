@@ -56,17 +56,16 @@ FlValue* monitor_to_flvalue(GdkMonitor* monitor) {
   const char* name = gdk_monitor_get_model(monitor);
   gint scale_factor = gdk_monitor_get_scale_factor(monitor);
 
-  g_autoptr(FlValue) value = fl_value_new_map();
+  auto value = fl_value_new_map();
   fl_value_set_string_take(value, "id", fl_value_new_float(0));
   fl_value_set_string_take(value, "name", fl_value_new_string(name));
-  fl_value_set_take(value, fl_value_new_string("size"), size);
-  fl_value_set_take(value, fl_value_new_string("visibleSize"), visible_size);
-  fl_value_set_take(value, fl_value_new_string("visiblePosition"),
-                    visible_position);
+  fl_value_set_string_take(value, "size", size);
+  fl_value_set_string_take(value, "visibleSize", visible_size);
+  fl_value_set_string_take(value, "visiblePosition", visible_position);
   fl_value_set_string_take(value, "scaleFactor",
                            fl_value_new_float(scale_factor));
 
-  return fl_value_ref(value);
+  return value;
 }
 
 static FlMethodResponse* get_cursor_screen_point(ScreenRetrieverPlugin* self,
@@ -116,7 +115,7 @@ static FlMethodResponse* get_all_displays(ScreenRetrieverPlugin* self,
   }
 
   g_autoptr(FlValue) result_data = fl_value_new_map();
-  fl_value_set_take(result_data, fl_value_new_string("displays"), displays);
+  fl_value_set_string_take(result_data, "displays", displays);
 
   return FL_METHOD_RESPONSE(fl_method_success_response_new(result_data));
 }
