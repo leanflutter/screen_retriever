@@ -159,6 +159,21 @@ static void method_call_cb(FlMethodChannel* channel,
   screen_retriever_plugin_handle_method_call(plugin, method_call);
 }
 
+static void on_event(FlMethodChannel* channel, const gchar* name) {
+  g_autoptr(FlValue) args = fl_value_new_map();
+  fl_value_set_string_take(args, "eventName", fl_value_new_string(name));
+  fl_method_channel_invoke_method(channel, "onEvent", args, nullptr, nullptr,
+                                  nullptr);
+}
+
+static void monitor_added_cb(FlMethodChannel* channel) {
+  on_event(channel, "display-added");
+}
+
+static void monitor_removed_cb(FlMethodChannel* channel) {
+  on_event(channel, "display-removed");
+}
+
 void screen_retriever_plugin_register_with_registrar(
     FlPluginRegistrar* registrar) {
   ScreenRetrieverPlugin* plugin = SCREEN_RETRIEVER_PLUGIN(
@@ -172,6 +187,14 @@ void screen_retriever_plugin_register_with_registrar(
                             "screen_retriever", FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(
       channel, method_call_cb, g_object_ref(plugin), g_object_unref);
+
+  GdkDisplay* display = gdk_display_get_default();
+  g_signal_connect_object(display, "monitor-added",
+                          G_CALLBACK(monitor_added_cb), channel,
+                          G_CONNECT_SWAPPED);
+  g_signal_connect_object(display, "monitor-removed",
+                          G_CALLBACK(monitor_removed_cb), channel,
+                          G_CONNECT_SWAPPED);
 
   g_object_unref(plugin);
 }
