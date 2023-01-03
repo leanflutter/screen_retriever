@@ -1,3 +1,7 @@
+## 0.1.5
+
+* Implement "display-added" and "display-removed" for Linux #5
+
 ## 0.1.4
 
 * [linux] Fix memory management issues on Linux #4
