@@ -1,13 +1,14 @@
 import 'dart:ui';
 
+/// Description of a user display screen.
 class Display {
   // Unique identifier associated with the display.
-  num id;
-  String? name;
-  Size size;
-  Offset? visiblePosition;
-  Size? visibleSize;
-  num? scaleFactor;
+  final num id;
+  final String? name;
+  final Size size;
+  final Offset? visiblePosition;
+  final Size? visibleSize;
+  final num? scaleFactor;
 
   Display({
     required this.id,
