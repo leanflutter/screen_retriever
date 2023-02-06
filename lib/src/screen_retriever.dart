@@ -20,7 +20,7 @@ class ScreenRetriever {
 
   final MethodChannel _channel = const MethodChannel('screen_retriever');
 
-  ObserverList<ScreenListener> _listeners = ObserverList<ScreenListener>();
+  final ObserverList<ScreenListener> _listeners = ObserverList<ScreenListener>();
 
   Future<void> _methodCallHandler(MethodCall call) async {
     final List<ScreenListener> localListeners =

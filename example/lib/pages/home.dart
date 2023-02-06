@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
@@ -8,8 +10,10 @@ final hotKeyManager = HotKeyManager.instance;
 final screenRetriever = ScreenRetriever.instance;
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> with ScreenListener {
@@ -55,7 +59,7 @@ class _HomePageState extends State<HomePage> with ScreenListener {
       children: <Widget>[
         if (_primaryDisplay != null)
           PreferenceListSection(
-            title: Text('Primary Display'),
+            title: const Text('Primary Display'),
             children: [
               PreferenceListItem(
                 title: Text('${_primaryDisplay!.name}'),
@@ -63,9 +67,9 @@ class _HomePageState extends State<HomePage> with ScreenListener {
               ),
             ],
           ),
-        if (_displayList.length > 0)
+        if (_displayList.isNotEmpty)
           PreferenceListSection(
-            title: Text('All Displays'),
+            title: const Text('All Displays'),
             children: [
               for (var display in _displayList)
                 PreferenceListItem(
@@ -78,14 +82,14 @@ class _HomePageState extends State<HomePage> with ScreenListener {
             ],
           ),
         PreferenceListSection(
-          title: Text('Methods'),
+          title: const Text('Methods'),
           children: [
             PreferenceListItem(
-              title: Text('getCursorScreenPoint'),
+              title: const Text('getCursorScreenPoint'),
               onTap: _handleGetCursorScreenPoint,
             ),
             PreferenceListItem(
-              title: Text('getPrimaryDisplay'),
+              title: const Text('getPrimaryDisplay'),
               onTap: () async {
                 _primaryDisplay = await screenRetriever.getPrimaryDisplay();
                 setState(() {});
@@ -95,7 +99,7 @@ class _HomePageState extends State<HomePage> with ScreenListener {
               },
             ),
             PreferenceListItem(
-              title: Text('getAllDisplays'),
+              title: const Text('getAllDisplays'),
               onTap: () async {
                 _displayList = await screenRetriever.getAllDisplays();
                 setState(() {});
