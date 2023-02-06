@@ -146,7 +146,8 @@ BOOL CALLBACK MonitorRepresentationEnumProc(HMONITOR monitor,
   flutter::EncodableValue* monitors =
       reinterpret_cast<flutter::EncodableValue*>(list_ref);
   flutter::EncodableMap display = MonitorToEncodableMap(monitor);
-  std::get<flutter::EncodableList>(*monitors).push_back(display);
+  std::get<flutter::EncodableList>(*monitors).push_back(
+      flutter::EncodableValue(display));
   return TRUE;
 }
 
@@ -192,7 +193,7 @@ void ScreenRetrieverPlugin::GetAllDisplays(
   flutter::EncodableMap result_data = flutter::EncodableMap();
   result_data[flutter::EncodableValue("displays")] = displays;
 
-  result->Success(result_data);
+  result->Success(flutter::EncodableValue(result_data));
 }
 
 void ScreenRetrieverPlugin::HandleMethodCall(
