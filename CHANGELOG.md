@@ -1,3 +1,8 @@
+## 0.1.6
+
+* Update Display to have final fields (#8)
+* Fix compilation issues related to getAllDisplays (#7)
+
 ## 0.1.5
 
 * Implement "display-added" and "display-removed" for Linux #5
