@@ -3,22 +3,20 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:meta/meta.dart';
 import 'package:screen_retriever/screen_retriever.dart';
 
-// import 'screen_listener.dart';
-
-const kScreenEventDisplayAdded = 'display-added';
-const kScreenEventDisplayRemoved = 'display-removed';
-
+/// Plugin for retrieving information about screen size, displays, and cursor position.
 class ScreenRetriever {
   ScreenRetriever._() {
-    _channel.setMethodCallHandler(_methodCallHandler);
+    channel.setMethodCallHandler(_methodCallHandler);
   }
 
   /// The shared instance of [ScreenRetriever].
   static final ScreenRetriever instance = ScreenRetriever._();
 
-  final MethodChannel _channel = const MethodChannel('screen_retriever');
+  @visibleForTesting
+  final MethodChannel channel = const MethodChannel('screen_retriever');
 
   ObserverList<ScreenListener> _listeners = ObserverList<ScreenListener>();
 
@@ -54,7 +52,7 @@ class ScreenRetriever {
       'devicePixelRatio': window.devicePixelRatio,
     };
     final Map<dynamic, dynamic> resultData =
-        await _channel.invokeMethod('getCursorScreenPoint', arguments);
+        await channel.invokeMethod('getCursorScreenPoint', arguments);
     return Offset(
       resultData['x'],
       resultData['y'],
@@ -66,7 +64,7 @@ class ScreenRetriever {
       'devicePixelRatio': window.devicePixelRatio,
     };
     final Map<dynamic, dynamic> resultData =
-        await _channel.invokeMethod('getPrimaryDisplay', arguments);
+        await channel.invokeMethod('getPrimaryDisplay', arguments);
     return Display.fromJson(Map<String, dynamic>.from(resultData));
   }
 
@@ -75,7 +73,7 @@ class ScreenRetriever {
       'devicePixelRatio': window.devicePixelRatio,
     };
     final Map<dynamic, dynamic> resultData =
-        await _channel.invokeMethod('getAllDisplays', arguments);
+        await channel.invokeMethod('getAllDisplays', arguments);
 
     List<Display> displayList = [];
 
