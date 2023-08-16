@@ -58,7 +58,7 @@ FlValue* monitor_to_flvalue(GdkMonitor* monitor) {
 
   auto value = fl_value_new_map();
   fl_value_set_string_take(value, "id", fl_value_new_float(0));
-  fl_value_set_string_take(value, "name", fl_value_new_string(name));
+  fl_value_set_string_take(value, "name", fl_value_new_string(name == nullptr ? "" : name));
   fl_value_set_string_take(value, "size", size);
   fl_value_set_string_take(value, "visibleSize", visible_size);
   fl_value_set_string_take(value, "visiblePosition", visible_position);
