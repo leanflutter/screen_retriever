@@ -50,7 +50,7 @@
 
 ```yaml
 dependencies:
-  screen_retriever: ^0.1.8
+  screen_retriever: ^0.1.9
 ```
 
 或

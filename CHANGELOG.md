@@ -1,3 +1,7 @@
+## 0.1.9
+
+* [windows] fix incorrect displays size
+
 ## 0.1.8
 
 * [macos] fix getCursorScreenPoint method
