@@ -9,6 +9,31 @@ import 'package:screen_retriever/screen_retriever.dart';
 final hotKeyManager = HotKeyManager.instance;
 final screenRetriever = ScreenRetriever.instance;
 
+class _DisplayItem extends StatelessWidget {
+  final Display display;
+
+  const _DisplayItem({Key? key, required this.display}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PreferenceListItem(
+      title: Text('${display.name}'),
+      summary: Text(
+        [
+          'id: ${display.id}',
+          'size: ${display.size}',
+          'visiblePosition: ${display.visiblePosition}',
+          'visibleSize: ${display.visibleSize}',
+          'scaleFactor: ${display.scaleFactor}',
+        ].join('\n'),
+      ),
+      onTap: () {
+        BotToast.showText(text: '${display.toJson()}');
+      },
+    );
+  }
+}
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -61,24 +86,14 @@ class _HomePageState extends State<HomePage> with ScreenListener {
           PreferenceListSection(
             title: const Text('Primary Display'),
             children: [
-              PreferenceListItem(
-                title: Text('${_primaryDisplay!.name}'),
-                summary: Text('DisplayID: ${_primaryDisplay!.id}'),
-              ),
+              _DisplayItem(display: _primaryDisplay!),
             ],
           ),
         if (_displayList.isNotEmpty)
           PreferenceListSection(
             title: const Text('All Displays'),
             children: [
-              for (var display in _displayList)
-                PreferenceListItem(
-                  title: Text('${display.name}'),
-                  summary: Text('DisplayID: ${display.id}'),
-                  onTap: () {
-                    BotToast.showText(text: '${display.toJson()}');
-                  },
-                ),
+              for (var display in _displayList) _DisplayItem(display: display),
             ],
           ),
         PreferenceListSection(
