@@ -1,3 +1,8 @@
+## 0.1.7
+
+* avoid nullptr as the param of fl_value_new_string (#15)
+* Use primary screen to calculate visible positions (#13)
+
 ## 0.1.6
 
 * Update Display to have final fields (#8)
