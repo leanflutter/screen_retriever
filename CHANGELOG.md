@@ -1,3 +1,7 @@
+## 0.1.8
+
+* [macos] fix getCursorScreenPoint method
+
 ## 0.1.7
 
 * avoid nullptr as the param of fl_value_new_string (#15)
