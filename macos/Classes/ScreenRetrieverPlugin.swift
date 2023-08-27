@@ -77,12 +77,18 @@ public class ScreenRetrieverPlugin: NSObject, FlutterPlugin {
     }
     
     public func getCursorScreenPoint(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let screenFrame = NSScreen.main!.frame
+        let currentScreen = NSScreen.main!
         let mouseLocation: NSPoint = NSEvent.mouseLocation;
         
+        var visibleHeight = currentScreen.frame.maxY
+        for screen in NSScreen.screens {
+            if (visibleHeight > screen.frame.maxY) {
+                visibleHeight = screen.frame.maxY
+            }
+        }
         let resultData: NSDictionary = [
             "x": mouseLocation.x,
-            "y": screenFrame.size.height - mouseLocation.y,
+            "y": visibleHeight - mouseLocation.y,
         ]
         result(resultData)
     }
