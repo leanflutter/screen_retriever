@@ -18,6 +18,9 @@ class ScreenRetriever {
   /// The shared instance of [ScreenRetriever].
   static final ScreenRetriever instance = ScreenRetriever._();
 
+  // ignore: deprecated_member_use
+  double get devicePixelRatio => window.devicePixelRatio;
+
   final MethodChannel _channel = const MethodChannel('screen_retriever');
 
   final ObserverList<ScreenListener> _listeners =
@@ -55,7 +58,7 @@ class ScreenRetriever {
 
   Future<Offset> getCursorScreenPoint() async {
     final Map<String, dynamic> arguments = {
-      'devicePixelRatio': window.devicePixelRatio,
+      'devicePixelRatio': devicePixelRatio,
     };
     final Map<dynamic, dynamic> resultData =
         await _channel.invokeMethod('getCursorScreenPoint', arguments);
@@ -67,7 +70,7 @@ class ScreenRetriever {
 
   Future<Display> getPrimaryDisplay() async {
     final Map<String, dynamic> arguments = {
-      'devicePixelRatio': window.devicePixelRatio,
+      'devicePixelRatio': devicePixelRatio,
     };
     final Map<dynamic, dynamic> resultData =
         await _channel.invokeMethod('getPrimaryDisplay', arguments);
@@ -76,7 +79,7 @@ class ScreenRetriever {
 
   Future<List<Display>> getAllDisplays() async {
     final Map<String, dynamic> arguments = {
-      'devicePixelRatio': window.devicePixelRatio,
+      'devicePixelRatio': devicePixelRatio,
     };
     final Map<dynamic, dynamic> resultData =
         await _channel.invokeMethod('getAllDisplays', arguments);

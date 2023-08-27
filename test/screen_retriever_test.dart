@@ -27,11 +27,18 @@ void main() {
     }
 
     setUp(() {
-      screenRetriever.channel.setMockMethodCallHandler(handleMockMethodCall);
+      TestDefaultBinaryMessengerBinding
+          .instance // wrap
+          .defaultBinaryMessenger
+          .setMockMethodCallHandler(
+              screenRetriever.channel, handleMockMethodCall);
     });
 
     tearDown(() {
-      screenRetriever.channel.setMockMethodCallHandler(null);
+      TestDefaultBinaryMessengerBinding
+          .instance // wrap
+          .defaultBinaryMessenger
+          .setMockMethodCallHandler(screenRetriever.channel, null);
     });
 
     test('should correctly parse output when calling getCursorScreenPoint',
