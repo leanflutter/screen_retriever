@@ -223,6 +223,13 @@ packages:
       relative: true
     source: path
     version: "0.2.0"
+  screen_retriever_windows:
+    dependency: "direct overridden"
+    description:
+      path: "../../screen_retriever_windows"
+      relative: true
+    source: path
+    version: "0.2.0"
   sky_engine:
     dependency: transitive
     description: flutter
