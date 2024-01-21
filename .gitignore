@@ -1,12 +1,5 @@
-.DS_Store
 .dart_tool/
-.vscode/
-
-.packages
-.pub/
-
-build/
-
 .idea/
+
 *.iml
-*pubspec_overrides.yaml
+pubspec_overrides.yaml
