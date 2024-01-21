@@ -1,8 +1,7 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:screen_retriever_platform_interface/src/display.dart';
-import 'package:screen_retriever_platform_interface/src/screen_retriever_method_channel.dart';
-import 'package:screen_retriever_platform_interface/src/screen_retriever_platform.dart';
+import 'package:screen_retriever/screen_retriever.dart';
 
 class MockScreenRetrieverPlatform
     with MockPlatformInterfaceMixin
@@ -13,17 +12,19 @@ class MockScreenRetrieverPlatform
   }
 
   @override
-  Future<Display> getPrimaryDisplay() {
+  Future<List<Display>> getAllDisplays() {
     throw UnimplementedError();
   }
 
   @override
-  Future<List<Display>> getAllDisplays() {
+  Future<Display> getPrimaryDisplay() {
     throw UnimplementedError();
   }
 }
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   final ScreenRetrieverPlatform initialPlatform =
       ScreenRetrieverPlatform.instance;
 
@@ -32,12 +33,10 @@ void main() {
   });
 
   test('getCursorScreenPoint', () async {
+    ScreenRetriever screenRetriever = ScreenRetriever.instance;
     MockScreenRetrieverPlatform fakePlatform = MockScreenRetrieverPlatform();
     ScreenRetrieverPlatform.instance = fakePlatform;
 
-    expect(
-      await ScreenRetrieverPlatform.instance.getCursorScreenPoint(),
-      Offset.zero,
-    );
+    expect(await screenRetriever.getCursorScreenPoint(), Offset.zero);
   });
 }

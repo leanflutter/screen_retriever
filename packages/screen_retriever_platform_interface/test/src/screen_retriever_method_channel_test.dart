@@ -6,13 +6,19 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelScreenRetriever platform = MethodChannelScreenRetriever();
-  const MethodChannel channel = MethodChannel('screen_retriever');
+  const MethodChannel channel = MethodChannel(
+    'dev.leanflutter.plugins/screen_retriever',
+  );
 
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
       channel,
       (MethodCall methodCall) async {
+        switch (methodCall.method) {
+          case 'getCursorScreenPoint':
+            return {'dx': 0.0, 'dy': 0.0};
+        }
         return '42';
       },
     );
@@ -23,7 +29,7 @@ void main() {
         .setMockMethodCallHandler(channel, null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await platform.getPlatformVersion(), '42');
+  test('getCursorScreenPoint', () async {
+    expect(await platform.getCursorScreenPoint(), Offset.zero);
   });
 }

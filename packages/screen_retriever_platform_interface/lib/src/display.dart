@@ -42,24 +42,30 @@ class Display {
   Map<String, dynamic> toJson() => _$DisplayToJson(this);
 }
 
-// Convert Offset to/from Map<String, dynamic>
-class _OffsetConverter extends JsonConverter<Offset, Map<String, dynamic>> {
+// Convert Offset to/from Map<Object?, Object?>
+class _OffsetConverter extends JsonConverter<Offset, Map<Object?, Object?>> {
   const _OffsetConverter();
 
   @override
-  Offset fromJson(json) => Offset(json['dx'], json['dy']);
+  Offset fromJson(json) {
+    final map = json.cast<String, dynamic>();
+    return Offset(map['dx'], map['dy']);
+  }
 
   @override
   Map<String, dynamic> toJson(Offset object) =>
       {'dx': object.dx, 'dy': object.dy};
 }
 
-// Convert Size to/from Map<String, dynamic>
-class _SizeConverter extends JsonConverter<Size, Map<String, dynamic>> {
+// Convert Size to/from Map<Object?, Object?>
+class _SizeConverter extends JsonConverter<Size, Map<Object?, Object?>> {
   const _SizeConverter();
 
   @override
-  Size fromJson(json) => Size(json['width'], json['height']);
+  Size fromJson(json) {
+    final map = json.cast<String, dynamic>();
+    return Size(map['width'], map['height']);
+  }
 
   @override
   Map<String, dynamic> toJson(Size object) =>

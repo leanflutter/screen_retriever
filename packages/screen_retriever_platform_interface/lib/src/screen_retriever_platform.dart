@@ -1,4 +1,6 @@
+import 'package:flutter/widgets.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:screen_retriever_platform_interface/src/display.dart';
 import 'package:screen_retriever_platform_interface/src/screen_retriever_method_channel.dart';
 
 abstract class ScreenRetrieverPlatform extends PlatformInterface {
@@ -22,7 +24,21 @@ abstract class ScreenRetrieverPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+  Future<Offset> getCursorScreenPoint() {
+    throw UnimplementedError(
+      'getCursorScreenPoint() has not been implemented.',
+    );
+  }
+
+  Future<Display> getPrimaryDisplay() {
+    throw UnimplementedError(
+      'getPrimaryDisplay() has not been implemented.',
+    );
+  }
+
+  Future<List<Display>> getAllDisplays() async {
+    throw UnimplementedError(
+      'getAllDisplays() has not been implemented.',
+    );
   }
 }
