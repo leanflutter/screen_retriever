@@ -1,12 +1,9 @@
 # screen_retriever
 
-[![pub version][pub-image]][pub-url] [![][codecov-image]][codecov-url] [![][discord-image]][discord-url] ![][visits-count-image] 
+[![pub version][pub-image]][pub-url] [![][discord-image]][discord-url] ![][visits-count-image] 
 
 [pub-image]: https://img.shields.io/pub/v/screen_retriever.svg
 [pub-url]: https://pub.dev/packages/screen_retriever
-
-[codecov-image]: https://codecov.io/gh/leanflutter/screen_retriever/branch/main/graph/badge.svg?token=9UET13JP0B
-[codecov-url]: https://codecov.io/gh/leanflutter/screen_retriever
 
 [discord-image]: https://img.shields.io/discord/884679008049037342.svg
 [discord-url]: https://discord.gg/zPa6EZ2jqb
@@ -50,7 +47,7 @@ Add this to your package's pubspec.yaml file:
 
 ```yaml
 dependencies:
-  screen_retriever: ^0.1.9
+  screen_retriever: ^0.2.0
 ```
 
 Or
