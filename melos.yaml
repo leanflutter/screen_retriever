@@ -1,5 +1,5 @@
-name: shortcut_menu_extender
-repository: https://github.com/leanflutter/shortcut_menu_extender
+name: screen_retriever_workspace
+repository: https://github.com/leanflutter/screen_retriever
 
 packages:
   - examples/**
@@ -33,9 +33,3 @@ scripts:
   fix:
     exec: dart fix . --apply
     description: Run `dart fix` for all packages.
-
-  dependency_validator:
-    exec: flutter pub run dependency_validator
-    packageFilters:
-      dependsOn:
-        - dependency_validator
