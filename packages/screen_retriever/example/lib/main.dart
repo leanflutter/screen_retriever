@@ -1,6 +1,6 @@
-import 'dart:async';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:screen_retriever/screen_retriever.dart';
+import 'package:screen_retriever_example/pages/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,35 +14,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Display _primaryDisplay = const Display(id: 0, size: Size.zero);
-  final _screenRetrieverPlugin = ScreenRetriever.instance;
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
-
-  Future<void> initPlatformState() async {
-    Display primaryDisplay = await _screenRetrieverPlugin.getPrimaryDisplay();
-
-    if (!mounted) return;
-    setState(() {
-      _primaryDisplay = primaryDisplay;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: ${_primaryDisplay.toJson()}\n'),
-        ),
-      ),
+      builder: BotToastInit(),
+      navigatorObservers: [BotToastNavigatorObserver()],
+      home: const HomePage(),
     );
   }
 }
