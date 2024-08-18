@@ -3,9 +3,6 @@
 // This must be included before many other Windows headers.
 #include <windows.h>
 
-// For getPlatformVersion; remove unless needed for your plugin implementation.
-#include <VersionHelpers.h>
-
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
@@ -18,28 +15,91 @@
 const double kBaseDpi = 96.0;
 
 namespace screen_retriever_windows {
+std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> event_sink_;
 
 // static
 void ScreenRetrieverWindowsPlugin::RegisterWithRegistrar(
-    flutter::PluginRegistrarWindows *registrar) {
+    flutter::PluginRegistrarWindows* registrar) {
   auto channel =
       std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
           registrar->messenger(), "dev.leanflutter.plugins/screen_retriever",
           &flutter::StandardMethodCodec::GetInstance());
 
-  auto plugin = std::make_unique<ScreenRetrieverWindowsPlugin>();
+  auto plugin = std::make_unique<ScreenRetrieverWindowsPlugin>(registrar);
 
   channel->SetMethodCallHandler(
-      [plugin_pointer = plugin.get()](const auto &call, auto result) {
+      [plugin_pointer = plugin.get()](const auto& call, auto result) {
         plugin_pointer->HandleMethodCall(call, std::move(result));
       });
+
+  auto event_channel =
+      std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
+          registrar->messenger(),
+          "dev.leanflutter.plugins/screen_retriever_event",
+          &flutter::StandardMethodCodec::GetInstance());
+  auto streamHandler = std::make_unique<flutter::StreamHandlerFunctions<>>(
+      [plugin_pointer = plugin.get()](
+          const flutter::EncodableValue* arguments,
+          std::unique_ptr<flutter::EventSink<>>&& events)
+          -> std::unique_ptr<flutter::StreamHandlerError<>> {
+        return plugin_pointer->OnListen(arguments, std::move(events));
+      },
+      [plugin_pointer = plugin.get()](const flutter::EncodableValue* arguments)
+          -> std::unique_ptr<flutter::StreamHandlerError<>> {
+        return plugin_pointer->OnCancel(arguments);
+      });
+  event_channel->SetStreamHandler(std::move(streamHandler));
 
   registrar->AddPlugin(std::move(plugin));
 }
 
-ScreenRetrieverWindowsPlugin::ScreenRetrieverWindowsPlugin() {}
-
+ScreenRetrieverWindowsPlugin::ScreenRetrieverWindowsPlugin(
+    flutter::PluginRegistrarWindows* registrar) {
+  registrar_ = registrar;
+  display_count_ = GetMonitorCount();
+  window_proc_id_ = registrar->RegisterTopLevelWindowProcDelegate(
+      [this](HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
+        return HandleWindowProc(hwnd, message, wparam, lparam);
+      });
+}
 ScreenRetrieverWindowsPlugin::~ScreenRetrieverWindowsPlugin() {}
+
+int ScreenRetrieverWindowsPlugin::GetMonitorCount() {
+  int monitorCount = 0;
+  EnumDisplayMonitors(
+      NULL, NULL,
+      [](HMONITOR, HDC, LPRECT, LPARAM lParam) -> BOOL {
+        int* count = (int*)lParam;
+        (*count)++;
+        return TRUE;
+      },
+      (LPARAM)&monitorCount);
+  return monitorCount;
+}
+
+std::optional<LRESULT> ScreenRetrieverWindowsPlugin::HandleWindowProc(
+    HWND hwnd,
+    UINT message,
+    WPARAM wparam,
+    LPARAM lparam) {
+  switch (message) {
+    case WM_DISPLAYCHANGE: {
+      int currentMonitorCount = GetMonitorCount();
+      flutter::EncodableMap args = flutter::EncodableMap();
+      if (currentMonitorCount > display_count_) {
+        args[flutter::EncodableValue("type")] = "display-added";
+      } else if (currentMonitorCount < display_count_) {
+        args[flutter::EncodableValue("type")] = "display-removed";
+      }
+      display_count_ = currentMonitorCount;
+      if (event_sink_) {
+        event_sink_->Success(flutter::EncodableValue(args));
+      }
+      break;
+    }
+  }
+  return std::nullopt;
+}
 
 flutter::EncodableMap MonitorToEncodableMap(HMONITOR monitor) {
   std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
@@ -158,7 +218,7 @@ void ScreenRetrieverWindowsPlugin::GetAllDisplays(
 }
 
 void ScreenRetrieverWindowsPlugin::HandleMethodCall(
-    const flutter::MethodCall<flutter::EncodableValue> &method_call,
+    const flutter::MethodCall<flutter::EncodableValue>& method_call,
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
   if (method_call.method_name().compare("getCursorScreenPoint") == 0) {
     GetCursorScreenPoint(method_call, std::move(result));
@@ -169,6 +229,21 @@ void ScreenRetrieverWindowsPlugin::HandleMethodCall(
   } else {
     result->NotImplemented();
   }
+}
+
+std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+ScreenRetrieverWindowsPlugin::OnListenInternal(
+    const flutter::EncodableValue* arguments,
+    std::unique_ptr<flutter::EventSink<flutter::EncodableValue>>&& events) {
+  event_sink_ = std::move(events);
+  return nullptr;
+}
+
+std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
+ScreenRetrieverWindowsPlugin ::OnCancelInternal(
+    const flutter::EncodableValue* arguments) {
+  event_sink_ = nullptr;
+  return nullptr;
 }
 
 }  // namespace screen_retriever_windows

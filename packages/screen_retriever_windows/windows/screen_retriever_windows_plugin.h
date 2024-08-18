@@ -1,6 +1,8 @@
 #ifndef FLUTTER_PLUGIN_SCREEN_RETRIEVER_WINDOWS_PLUGIN_H_
 #define FLUTTER_PLUGIN_SCREEN_RETRIEVER_WINDOWS_PLUGIN_H_
 
+#include <flutter/event_channel.h>
+#include <flutter/event_stream_handler_functions.h>
 #include <flutter/method_channel.h>
 #include <flutter/plugin_registrar_windows.h>
 
@@ -8,11 +10,25 @@
 
 namespace screen_retriever_windows {
 
-class ScreenRetrieverWindowsPlugin : public flutter::Plugin {
+class ScreenRetrieverWindowsPlugin
+    : public flutter::Plugin,
+      flutter::StreamHandler<flutter::EncodableValue> {
+ private:
+  flutter::PluginRegistrarWindows* registrar_;
+  std::unique_ptr<flutter::EventSink<flutter::EncodableValue>> event_sink_;
+
+  int32_t display_count_ = 0;
+  int32_t window_proc_id_ = -1;
+  int GetMonitorCount();
+  std::optional<LRESULT> HandleWindowProc(HWND hwnd,
+                                          UINT message,
+                                          WPARAM wparam,
+                                          LPARAM lparam);
+
  public:
   static void RegisterWithRegistrar(flutter::PluginRegistrarWindows* registrar);
 
-  ScreenRetrieverWindowsPlugin();
+  ScreenRetrieverWindowsPlugin(flutter::PluginRegistrarWindows* registrar);
 
   virtual ~ScreenRetrieverWindowsPlugin();
 
@@ -35,6 +51,13 @@ class ScreenRetrieverWindowsPlugin : public flutter::Plugin {
   void HandleMethodCall(
       const flutter::MethodCall<flutter::EncodableValue>& method_call,
       std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
+
+  std::unique_ptr<flutter::StreamHandlerError<>> OnListenInternal(
+      const flutter::EncodableValue* arguments,
+      std::unique_ptr<flutter::EventSink<>>&& events) override;
+
+  std::unique_ptr<flutter::StreamHandlerError<>> OnCancelInternal(
+      const flutter::EncodableValue* arguments) override;
 };
 
 }  // namespace screen_retriever_windows
