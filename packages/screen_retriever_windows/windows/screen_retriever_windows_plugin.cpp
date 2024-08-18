@@ -146,7 +146,22 @@ flutter::EncodableMap MonitorToEncodableMap(HMONITOR monitor) {
 
   flutter::EncodableMap display = flutter::EncodableMap();
 
-  display[flutter::EncodableValue("id")] = flutter::EncodableValue(0);
+  display[flutter::EncodableValue("id")] = flutter::EncodableValue("");
+  DISPLAY_DEVICE displayDevice;
+  displayDevice.cb = sizeof(DISPLAY_DEVICE);
+  int deviceIndex = 0;
+  while (EnumDisplayDevices(info.szDevice, deviceIndex, &displayDevice, 0)) {
+    if (displayDevice.StateFlags & DISPLAY_DEVICE_ACTIVE &&
+        (displayDevice.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP)) {
+      std::wstring deviceName(displayDevice.DeviceName);
+      if (deviceName.find(info.szDevice) == 0) {
+        display[flutter::EncodableValue("id")] = flutter::EncodableValue(
+            converter.to_bytes(displayDevice.DeviceID).c_str());
+      }
+    }
+    deviceIndex++;
+  }
+
   display[flutter::EncodableValue("name")] =
       flutter::EncodableValue(converter.to_bytes(display_name).c_str());
   display[flutter::EncodableValue("size")] = flutter::EncodableValue(size);

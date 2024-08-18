@@ -22,7 +22,7 @@ class Display {
       _$DisplayFromJson(json);
 
   /// Unique identifier associated with the display.
-  final num id;
+  final String id;
 
   /// The name of the display.
   final String? name;

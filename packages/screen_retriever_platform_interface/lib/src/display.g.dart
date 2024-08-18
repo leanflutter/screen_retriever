@@ -9,7 +9,7 @@ part of 'display.dart';
 // **************************************************************************
 
 Display _$DisplayFromJson(Map<String, dynamic> json) => Display(
-      id: json['id'] as num,
+      id: json['id'] as String,
       name: json['name'] as String?,
       size: const _SizeConverter().fromJson(json['size'] as Map),
       visiblePosition: _$JsonConverterFromJson<Map<Object?, Object?>, Offset>(
