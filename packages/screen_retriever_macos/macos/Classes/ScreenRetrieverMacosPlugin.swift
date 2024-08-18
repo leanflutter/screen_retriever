@@ -24,7 +24,7 @@ extension NSScreen {
             "height": self.visibleFrame.height,
         ]
         let dict: NSDictionary = [
-            "id": self.displayID,
+            "id": self.displayID.description,
             "name": name,
             "size": size,
             "visiblePosition": visiblePosition,
@@ -73,11 +73,6 @@ public class ScreenRetrieverMacosPlugin: NSObject, FlutterPlugin,FlutterStreamHa
         self._eventSink = nil
         return nil
     }
-    
-//    public func handleDidFinishLaunching(_ notification: Notification) {
-//        externalDisplayCount = NSScreen.screens.count
-//        setupNotificationCenter()
-//    }
     
     func setupNotificationCenter() {
         NotificationCenter.default.addObserver(

@@ -2,6 +2,7 @@
 
 * Convert to federated plugin
 * Implement "display-added" and "display-removed" for macOS #5
+* chore: Get the correct screen ID on Windows
 
 ## 0.1.9
 
