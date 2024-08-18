@@ -12,6 +12,8 @@
   (G_TYPE_CHECK_INSTANCE_CAST((obj), screen_retriever_linux_plugin_get_type(), \
                               ScreenRetrieverLinuxPlugin))
 
+FlEventChannel* event_channel;
+
 struct _ScreenRetrieverLinuxPlugin {
   GObject parent_instance;
 };
@@ -71,7 +73,7 @@ FlValue* monitor_to_flvalue(GdkMonitor* monitor) {
   gint scale_factor = gdk_monitor_get_scale_factor(monitor);
 
   auto value = fl_value_new_map();
-  fl_value_set_string_take(value, "id", fl_value_new_float(0));
+  fl_value_set_string_take(value, "id", fl_value_new_string(""));
   fl_value_set_string_take(value, "name",
                            fl_value_new_string(name == nullptr ? "" : name));
   fl_value_set_string_take(value, "size", size);
@@ -154,6 +156,20 @@ static void method_call_cb(FlMethodChannel* channel,
   screen_retriever_linux_plugin_handle_method_call(plugin, method_call);
 }
 
+static void emit_event(FlEventChannel* event_channel, const gchar* name) {
+  g_autoptr(FlValue) event = fl_value_new_map();
+  fl_value_set_string_take(event, "type", fl_value_new_string(name));
+  fl_event_channel_send(event_channel, event, nullptr, nullptr);
+}
+
+static void monitor_added_cb(FlEventChannel* event_channel) {
+  emit_event(event_channel, "display-added");
+}
+
+static void monitor_removed_cb(FlEventChannel* event_channel) {
+  emit_event(event_channel, "display-removed");
+}
+
 void screen_retriever_linux_plugin_register_with_registrar(
     FlPluginRegistrar* registrar) {
   ScreenRetrieverLinuxPlugin* plugin = SCREEN_RETRIEVER_LINUX_PLUGIN(
@@ -165,6 +181,20 @@ void screen_retriever_linux_plugin_register_with_registrar(
       "dev.leanflutter.plugins/screen_retriever", FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(
       channel, method_call_cb, g_object_ref(plugin), g_object_unref);
+
+  g_autoptr(FlStandardMethodCodec) event_codec = fl_standard_method_codec_new();
+  event_channel =
+      fl_event_channel_new(fl_plugin_registrar_get_messenger(registrar),
+                           "dev.leanflutter.plugins/screen_retriever_event",
+                           FL_METHOD_CODEC(event_codec));
+
+  GdkDisplay* display = gdk_display_get_default();
+  g_signal_connect_object(display, "monitor-added",
+                          G_CALLBACK(monitor_added_cb), event_channel,
+                          G_CONNECT_SWAPPED);
+  g_signal_connect_object(display, "monitor-removed",
+                          G_CALLBACK(monitor_removed_cb), event_channel,
+                          G_CONNECT_SWAPPED);
 
   g_object_unref(plugin);
 }
