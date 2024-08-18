@@ -48,11 +48,64 @@ extension NSRect {
     }
 }
 
-public class ScreenRetrieverMacosPlugin: NSObject, FlutterPlugin {
+public class ScreenRetrieverMacosPlugin: NSObject, FlutterPlugin,FlutterStreamHandler {
+    private var _eventSink: FlutterEventSink?
+    
+    var externalDisplayCount:Int = 0
+    
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "dev.leanflutter.plugins/screen_retriever", binaryMessenger: registrar.messenger)
         let instance = ScreenRetrieverMacosPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
+        let eventChannel = FlutterEventChannel(name: "dev.leanflutter.plugins/screen_retriever_event", binaryMessenger: registrar.messenger)
+        eventChannel.setStreamHandler(instance)
+        
+        instance.externalDisplayCount = NSScreen.screens.count
+        instance.setupNotificationCenter()
+    }
+    
+    public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+        self._eventSink = events
+        return nil;
+    }
+    
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        self._eventSink = nil
+        return nil
+    }
+    
+//    public func handleDidFinishLaunching(_ notification: Notification) {
+//        externalDisplayCount = NSScreen.screens.count
+//        setupNotificationCenter()
+//    }
+    
+    func setupNotificationCenter() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleDisplayConnection),
+            name: NSApplication.didChangeScreenParametersNotification,
+            object: nil)
+    }
+    
+    
+    @objc func handleDisplayConnection(notification: Notification) {
+        if externalDisplayCount < NSScreen.screens.count {
+            _emitEvent("display-added")
+            externalDisplayCount = NSScreen.screens.count
+        } else if externalDisplayCount > NSScreen.screens.count {
+            _emitEvent("display-removed")
+            externalDisplayCount = NSScreen.screens.count
+        }
+    }
+    
+    public func _emitEvent(_ eventName: String) {
+        guard let eventSink = self._eventSink else {
+            return
+        }
+        let event: NSDictionary = [
+            "type": eventName,
+        ]
+        eventSink(event)
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {

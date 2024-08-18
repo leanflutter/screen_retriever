@@ -1,6 +1,7 @@
 ## 0.2.0
 
 * Convert to federated plugin
+* Implement "display-added" and "display-removed" for macOS #5
 
 ## 0.1.9
 

@@ -4,9 +4,6 @@ import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:screen_retriever/screen_retriever.dart';
 import 'package:screen_retriever_example/widgets/display_card.dart';
 
-final hotKeyManager = HotKeyManager.instance;
-final screenRetriever = ScreenRetriever.instance;
-
 class _ListSection extends StatelessWidget {
   const _ListSection({required this.title, required this.children});
 
@@ -42,18 +39,14 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with ScreenListener {
   Display? _primaryDisplay;
   List<Display> _displayList = [];
 
   @override
   void initState() {
+    screenRetriever.addListener(this);
     super.initState();
-    _init();
-  }
-
-  Future<void> _init() async {
-    // 初始化快捷键
     hotKeyManager.unregisterAll();
     hotKeyManager.register(
       HotKey(KeyCode.keyD, modifiers: [KeyModifier.alt]),
@@ -61,6 +54,24 @@ class _HomePageState extends State<HomePage> {
         _handleGetCursorScreenPoint();
       },
     );
+    _getDisplays();
+  }
+
+  @override
+  void dispose() {
+    screenRetriever.removeListener(this);
+    super.dispose();
+  }
+
+  @override
+  void onScreenEvent(String eventName) {
+    BotToast.showText(
+      text: 'onScreenEvent: $eventName',
+    );
+    _getDisplays();
+  }
+
+  Future<void> _getDisplays() async {
     _primaryDisplay = await screenRetriever.getPrimaryDisplay();
     _displayList = await screenRetriever.getAllDisplays();
     setState(() {});

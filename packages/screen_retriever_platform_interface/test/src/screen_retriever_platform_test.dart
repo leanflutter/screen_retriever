@@ -8,6 +8,10 @@ class MockScreenRetrieverPlatform
     with MockPlatformInterfaceMixin
     implements ScreenRetrieverPlatform {
   @override
+  Stream<Map<Object?, Object?>> get onScreenEventReceiver =>
+      throw UnimplementedError();
+
+  @override
   Future<Offset> getCursorScreenPoint() {
     return Future(() => Offset.zero);
   }

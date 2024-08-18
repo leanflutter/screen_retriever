@@ -13,6 +13,17 @@ class MethodChannelScreenRetriever extends ScreenRetrieverPlatform {
     'dev.leanflutter.plugins/screen_retriever',
   );
 
+  /// The event channel used to receive events from the native platform.
+  @visibleForTesting
+  final eventChannel = const EventChannel(
+    'dev.leanflutter.plugins/screen_retriever_event',
+  );
+
+  @override
+  Stream<Map<Object?, Object?>> get onScreenEventReceiver {
+    return eventChannel.receiveBroadcastStream().cast<Map<Object?, Object?>>();
+  }
+
   // The default arguments used for [methodChannel.invokeMethod].
   Map<String, dynamic> get _defaultArguments {
     MediaQueryData mediaQueryData = MediaQueryData.fromView(

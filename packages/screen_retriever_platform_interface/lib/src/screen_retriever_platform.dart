@@ -24,6 +24,12 @@ abstract class ScreenRetrieverPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  Stream<Map<Object?, Object?>> get onScreenEventReceiver {
+    throw UnimplementedError(
+      'onScreenEventReceiver() has not been implemented.',
+    );
+  }
+
   Future<Offset> getCursorScreenPoint() {
     throw UnimplementedError(
       'getCursorScreenPoint() has not been implemented.',
