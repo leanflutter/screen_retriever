@@ -4,7 +4,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:screen_retriever/screen_retriever.dart';
 
 final _fakeDisplayJson = <String, dynamic>{
-  'id': 0,
+  'id': '0',
   'name': 'fakeDisplay',
   'size': {'width': 1920.0, 'height': 1080.0},
   'visiblePosition': {'dx': 0.0, 'dy': 0.0},
@@ -79,7 +79,7 @@ void main() {
         () async {
       Display primaryDisplay = await screenRetriever.getPrimaryDisplay();
 
-      expect(primaryDisplay.id, 0);
+      expect(primaryDisplay.id, '0');
       expect(primaryDisplay.name, 'fakeDisplay');
       expect(primaryDisplay.size.width, 1920.0);
       expect(primaryDisplay.size.height, 1080.0);
@@ -94,7 +94,7 @@ void main() {
       List<Display> displayList = await screenRetriever.getAllDisplays();
 
       expect(displayList.length, 2);
-      expect(displayList[0].id, 0);
+      expect(displayList[0].id, '0');
       expect(displayList[0].name, 'fakeDisplay');
       expect(displayList[0].size.width, 1920.0);
       expect(displayList[0].size.height, 1080.0);
