@@ -1,39 +1,42 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
-import 'package:preference_list/preference_list.dart';
 import 'package:screen_retriever/screen_retriever.dart';
+import 'package:screen_retriever_example/widgets/display_card.dart';
 
 final hotKeyManager = HotKeyManager.instance;
 final screenRetriever = ScreenRetriever.instance;
 
-class _DisplayItem extends StatelessWidget {
-  final Display display;
+class _ListSection extends StatelessWidget {
+  const _ListSection({required this.title, required this.children});
 
-  const _DisplayItem({Key? key, required this.display}) : super(key: key);
+  final Widget title;
+  final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
-    return PreferenceListItem(
-      title: Text('${display.name}'),
-      summary: Text(
-        [
-          'id: ${display.id}',
-          'size: ${display.size}',
-          'visiblePosition: ${display.visiblePosition}',
-          'visibleSize: ${display.visibleSize}',
-          'scaleFactor: ${display.scaleFactor}',
-        ].join('\n'),
-      ),
-      onTap: () {
-        BotToast.showText(text: '${display.toJson()}');
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 20,
+            top: 12,
+            bottom: 6,
+          ),
+          child: DefaultTextStyle(
+            style: Theme.of(context).textTheme.titleMedium ?? const TextStyle(),
+            child: title,
+          ),
+        ),
+        ...children,
+      ],
     );
   }
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -49,7 +52,7 @@ class _HomePageState extends State<HomePage> {
     _init();
   }
 
-  void _init() async {
+  Future<void> _init() async {
     // 初始化快捷键
     hotKeyManager.unregisterAll();
     hotKeyManager.register(
@@ -70,54 +73,77 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBody(BuildContext context) {
-    return PreferenceList(
-      children: <Widget>[
-        if (_primaryDisplay != null)
-          PreferenceListSection(
-            title: const Text('Primary Display'),
-            children: [
-              _DisplayItem(display: _primaryDisplay!),
-            ],
+  Widget _buildPrimaryDisplay(BuildContext context) {
+    if (_primaryDisplay != null) {
+      return _ListSection(
+        title: const Text('Primary Display'),
+        children: [
+          DisplayCard(_primaryDisplay!),
+        ],
+      );
+    }
+    return const SizedBox();
+  }
+
+  Widget _buildAllDisplays(BuildContext context) {
+    if (_displayList.isNotEmpty) {
+      return _ListSection(
+        title: const Text('All Displays'),
+        children: [
+          for (var display in _displayList) DisplayCard(display),
+        ],
+      );
+    }
+    return const SizedBox();
+  }
+
+  Widget _buildMethods(BuildContext context) {
+    return _ListSection(
+      title: const Text('Methods'),
+      children: [
+        Card(
+          child: ListTile(
+            title: const Text('getCursorScreenPoint'),
+            trailing: const Text('Alt+D'),
+            onTap: _handleGetCursorScreenPoint,
           ),
-        if (_displayList.isNotEmpty)
-          PreferenceListSection(
-            title: const Text('All Displays'),
-            children: [
-              for (var display in _displayList) _DisplayItem(display: display),
-            ],
-          ),
-        PreferenceListSection(
-          title: const Text('Methods'),
-          children: [
-            PreferenceListItem(
-              title: const Text('getCursorScreenPoint'),
-              detailText: const Text('Alt+D'),
-              onTap: _handleGetCursorScreenPoint,
-            ),
-            PreferenceListItem(
-              title: const Text('getPrimaryDisplay'),
-              onTap: () async {
-                _primaryDisplay = await screenRetriever.getPrimaryDisplay();
-                setState(() {});
-                BotToast.showText(
-                  text: 'primaryDisplay: ${_primaryDisplay!.toJson()}',
-                );
-              },
-            ),
-            PreferenceListItem(
-              title: const Text('getAllDisplays'),
-              onTap: () async {
-                _displayList = await screenRetriever.getAllDisplays();
-                setState(() {});
-                BotToast.showText(
-                  text:
-                      'allDisplays:\n${_displayList.map((e) => e.toJson()).join('\n')}',
-                );
-              },
-            ),
-          ],
         ),
+        Card(
+          child: ListTile(
+            title: const Text('getPrimaryDisplay'),
+            onTap: () async {
+              _primaryDisplay = await screenRetriever.getPrimaryDisplay();
+              setState(() {});
+              BotToast.showText(
+                text: 'primaryDisplay: ${_primaryDisplay!.toJson()}',
+              );
+            },
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: const Text('getAllDisplays'),
+            onTap: () async {
+              _displayList = await screenRetriever.getAllDisplays();
+              setState(() {});
+              BotToast.showText(
+                text:
+                    'allDisplays:\n${_displayList.map((e) => e.toJson()).join('\n')}',
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: <Widget>[
+        _buildPrimaryDisplay(context),
+        _buildAllDisplays(context),
+        _buildMethods(context),
       ],
     );
   }
@@ -126,7 +152,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Plugin example app'),
+        title: const Text('Screen Retriever Example'),
       ),
       body: _buildBody(context),
     );
