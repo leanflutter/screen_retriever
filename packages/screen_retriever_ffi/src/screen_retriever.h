@@ -36,14 +36,3 @@ class ScreenRetriever {
   // Get all displays information
   virtual std::vector<Display> GetAllDisplays() = 0;
 };
-
-// macOS implementation of ScreenRetriever
-class MacOSScreenRetriever : public ScreenRetriever {
- public:
-  MacOSScreenRetriever();
-  ~MacOSScreenRetriever() override;
-
-  CursorPoint GetCursorScreenPoint() override;
-  Display GetPrimaryDisplay() override;
-  std::vector<Display> GetAllDisplays() override;
-};

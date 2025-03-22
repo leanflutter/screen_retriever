@@ -1,8 +1,29 @@
 #include "screen_retriever_ffi.h"
 #include <iostream>
 
+// Include platform-specific implementations
+#if defined(__APPLE__)
+#include "screen_retriever_macos.h"
+#elif defined(_WIN32)
+#include "screen_retriever_windows.h"
+#endif
+
 // Global instance of ScreenRetriever
-static ScreenRetriever* g_screen_retriever = new MacOSScreenRetriever();
+static ScreenRetriever* g_screen_retriever = nullptr;
+
+// Initialize the appropriate screen retriever based on platform
+void initialize_screen_retriever() {
+  if (g_screen_retriever == nullptr) {
+    #if defined(__APPLE__)
+      g_screen_retriever = new ScreenRetrieverMacOS();
+    #elif defined(_WIN32)
+      g_screen_retriever = new ScreenRetrieverWindows();
+    #else
+      // Add other platform implementations as needed
+      std::cerr << "Unsupported platform" << std::endl;
+    #endif
+  }
+}
 
 // A very short-lived native function.
 //
@@ -29,6 +50,7 @@ FFI_PLUGIN_EXPORT int sum_long_running(int a, int b) {
 }
 
 FFI_PLUGIN_EXPORT struct Display* get_primary_display() {
+  initialize_screen_retriever();
   if (g_screen_retriever != nullptr) {
     // Get primary display information
     Display primaryDisplay = g_screen_retriever->GetPrimaryDisplay();
@@ -41,6 +63,7 @@ FFI_PLUGIN_EXPORT struct Display* get_primary_display() {
 }
 
 FFI_PLUGIN_EXPORT int get_all_displays() {
+  initialize_screen_retriever();
   if (g_screen_retriever != nullptr) {
     // Get all displays information
     std::vector<Display> displays = g_screen_retriever->GetAllDisplays();
@@ -55,6 +78,7 @@ FFI_PLUGIN_EXPORT int get_all_displays() {
 
 // Get the current cursor position
 FFI_PLUGIN_EXPORT int get_cursor_screen_point() {
+  initialize_screen_retriever();
   if (g_screen_retriever != nullptr) {
     // Get cursor position
     CursorPoint cursorPoint = g_screen_retriever->GetCursorScreenPoint();

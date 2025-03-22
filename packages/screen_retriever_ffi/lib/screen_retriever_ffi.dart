@@ -1,11 +1,18 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:ffi' as ffi;
 import 'dart:io';
 import 'dart:isolate';
 
 import 'screen_retriever_ffi_bindings_generated.dart';
 
-Display getPrimaryDisplay() => _bindings.get_primary_display();
+Display getPrimaryDisplay() {
+  final pointer = _bindings.get_primary_display();
+  if (pointer == nullptr) {
+    throw Exception('Failed to get primary display');
+  }
+  return pointer.ref;
+}
 
 int getAllDisplays() => _bindings.get_all_displays();
 

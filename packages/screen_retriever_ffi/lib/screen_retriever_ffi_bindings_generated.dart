@@ -26,6 +26,15 @@ class ScreenRetrieverFfiBindings {
     ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName) lookup,
   ) : _lookup = lookup;
 
+  /// Abstract base class for ScreenRetriever
+  late final ffi.Pointer<ffi.Int> _ScreenRetriever = _lookup<ffi.Int>(
+    'ScreenRetriever',
+  );
+
+  int get ScreenRetriever => _ScreenRetriever.value;
+
+  set ScreenRetriever(int value) => _ScreenRetriever.value = value;
+
   /// A very short-lived native function.
   ///
   /// For very short-lived functions, it is fine to call them on the main isolate.
@@ -56,14 +65,16 @@ class ScreenRetrieverFfiBindings {
       _sum_long_runningPtr.asFunction<int Function(int, int)>();
 
   /// Get primary display
-  Display get_primary_display() {
+  ffi.Pointer<Display> get_primary_display() {
     return _get_primary_display();
   }
 
   late final _get_primary_displayPtr =
-      _lookup<ffi.NativeFunction<Display Function()>>('get_primary_display');
+      _lookup<ffi.NativeFunction<ffi.Pointer<Display> Function()>>(
+        'get_primary_display',
+      );
   late final _get_primary_display =
-      _get_primary_displayPtr.asFunction<Display Function()>();
+      _get_primary_displayPtr.asFunction<ffi.Pointer<Display> Function()>();
 
   /// Get all displays
   int get_all_displays() {
@@ -87,23 +98,24 @@ class ScreenRetrieverFfiBindings {
   late final _get_cursor_screen_point =
       _get_cursor_screen_pointPtr.asFunction<int Function()>();
 
-  /// Abstract base class for ScreenRetriever
-  late final ffi.Pointer<ffi.Int> _ScreenRetriever = _lookup<ffi.Int>(
-    'ScreenRetriever',
-  );
-
-  int get ScreenRetriever => _ScreenRetriever.value;
-
-  set ScreenRetriever(int value) => _ScreenRetriever.value = value;
-
   /// macOS implementation of ScreenRetriever
-  late final ffi.Pointer<ffi.Int> _MacOSScreenRetriever = _lookup<ffi.Int>(
-    'MacOSScreenRetriever',
+  late final ffi.Pointer<ffi.Int> _ScreenRetrieverMacOS = _lookup<ffi.Int>(
+    'ScreenRetrieverMacOS',
   );
 
-  int get MacOSScreenRetriever => _MacOSScreenRetriever.value;
+  int get ScreenRetrieverMacOS => _ScreenRetrieverMacOS.value;
 
-  set MacOSScreenRetriever(int value) => _MacOSScreenRetriever.value = value;
+  set ScreenRetrieverMacOS(int value) => _ScreenRetrieverMacOS.value = value;
+
+  /// Windows implementation of ScreenRetriever
+  late final ffi.Pointer<ffi.Int> _ScreenRetrieverWindows = _lookup<ffi.Int>(
+    'ScreenRetrieverWindows',
+  );
+
+  int get ScreenRetrieverWindows => _ScreenRetrieverWindows.value;
+
+  set ScreenRetrieverWindows(int value) =>
+      _ScreenRetrieverWindows.value = value;
 }
 
 /// Representation of a display

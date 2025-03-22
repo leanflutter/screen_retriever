@@ -9,9 +9,13 @@ headers:
   entry-points:
     - 'src/screen_retriever_ffi.h'
     - 'src/screen_retriever.h'
+    - 'src/screen_retriever_macos.h'
+    - 'src/screen_retriever_windows.h'
   include-directives:
     - 'src/screen_retriever_ffi.h'
     - 'src/screen_retriever.h'
+    - 'src/screen_retriever_macos.h'
+    - 'src/screen_retriever_windows.h'
 preamble: |
   // ignore_for_file: always_specify_types
   // ignore_for_file: camel_case_types
