@@ -1,10 +1,15 @@
-
 import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:isolate';
 
 import 'screen_retriever_ffi_bindings_generated.dart';
+
+Display getPrimaryDisplay() => _bindings.get_primary_display();
+
+int getAllDisplays() => _bindings.get_all_displays();
+
+int getCursorScreenPoint() => _bindings.get_cursor_screen_point();
 
 /// A very short-lived native function.
 ///
@@ -51,7 +56,6 @@ final DynamicLibrary _dylib = () {
 
 /// The bindings to the native functions in [_dylib].
 final ScreenRetrieverFfiBindings _bindings = ScreenRetrieverFfiBindings(_dylib);
-
 
 /// A request to compute `sum`.
 ///

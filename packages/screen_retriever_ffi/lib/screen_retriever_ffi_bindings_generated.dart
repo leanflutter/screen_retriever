@@ -15,31 +15,24 @@ import 'dart:ffi' as ffi;
 class ScreenRetrieverFfiBindings {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
-      _lookup;
+  _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
   ScreenRetrieverFfiBindings(ffi.DynamicLibrary dynamicLibrary)
-      : _lookup = dynamicLibrary.lookup;
+    : _lookup = dynamicLibrary.lookup;
 
   /// The symbols are looked up with [lookup].
   ScreenRetrieverFfiBindings.fromLookup(
-      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
-          lookup)
-      : _lookup = lookup;
+    ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName) lookup,
+  ) : _lookup = lookup;
 
   /// A very short-lived native function.
   ///
   /// For very short-lived functions, it is fine to call them on the main isolate.
   /// They will block the Dart execution while running the native function, so
   /// only do this for native functions which are guaranteed to be short-lived.
-  int sum(
-    int a,
-    int b,
-  ) {
-    return _sum(
-      a,
-      b,
-    );
+  int sum(int a, int b) {
+    return _sum(a, b);
   }
 
   late final _sumPtr =
@@ -51,19 +44,103 @@ class ScreenRetrieverFfiBindings {
   /// Do not call these kind of native functions in the main isolate. They will
   /// block Dart execution. This will cause dropped frames in Flutter applications.
   /// Instead, call these native functions on a separate isolate.
-  int sum_long_running(
-    int a,
-    int b,
-  ) {
-    return _sum_long_running(
-      a,
-      b,
-    );
+  int sum_long_running(int a, int b) {
+    return _sum_long_running(a, b);
   }
 
   late final _sum_long_runningPtr =
       _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>(
-          'sum_long_running');
+        'sum_long_running',
+      );
   late final _sum_long_running =
       _sum_long_runningPtr.asFunction<int Function(int, int)>();
+
+  /// Get primary display
+  Display get_primary_display() {
+    return _get_primary_display();
+  }
+
+  late final _get_primary_displayPtr =
+      _lookup<ffi.NativeFunction<Display Function()>>('get_primary_display');
+  late final _get_primary_display =
+      _get_primary_displayPtr.asFunction<Display Function()>();
+
+  /// Get all displays
+  int get_all_displays() {
+    return _get_all_displays();
+  }
+
+  late final _get_all_displaysPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function()>>('get_all_displays');
+  late final _get_all_displays =
+      _get_all_displaysPtr.asFunction<int Function()>();
+
+  /// Get the current cursor position
+  int get_cursor_screen_point() {
+    return _get_cursor_screen_point();
+  }
+
+  late final _get_cursor_screen_pointPtr =
+      _lookup<ffi.NativeFunction<ffi.Int Function()>>(
+        'get_cursor_screen_point',
+      );
+  late final _get_cursor_screen_point =
+      _get_cursor_screen_pointPtr.asFunction<int Function()>();
+
+  /// Abstract base class for ScreenRetriever
+  late final ffi.Pointer<ffi.Int> _ScreenRetriever = _lookup<ffi.Int>(
+    'ScreenRetriever',
+  );
+
+  int get ScreenRetriever => _ScreenRetriever.value;
+
+  set ScreenRetriever(int value) => _ScreenRetriever.value = value;
+
+  /// macOS implementation of ScreenRetriever
+  late final ffi.Pointer<ffi.Int> _MacOSScreenRetriever = _lookup<ffi.Int>(
+    'MacOSScreenRetriever',
+  );
+
+  int get MacOSScreenRetriever => _MacOSScreenRetriever.value;
+
+  set MacOSScreenRetriever(int value) => _MacOSScreenRetriever.value = value;
+}
+
+/// Representation of a display
+final class Display extends ffi.Struct {
+  @ffi.Int()
+  external int unnamed;
+
+  @ffi.Int()
+  external int unnamed1;
+
+  @ffi.Double()
+  external double width;
+
+  @ffi.Double()
+  external double height;
+
+  @ffi.Double()
+  external double visiblePositionX;
+
+  @ffi.Double()
+  external double visiblePositionY;
+
+  @ffi.Double()
+  external double visibleWidth;
+
+  @ffi.Double()
+  external double visibleHeight;
+
+  @ffi.Double()
+  external double scaleFactor;
+}
+
+/// Representation of a cursor position
+final class CursorPoint extends ffi.Struct {
+  @ffi.Double()
+  external double x;
+
+  @ffi.Double()
+  external double y;
 }

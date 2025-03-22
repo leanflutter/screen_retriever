@@ -1,7 +1,27 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:screen_retriever_ffi/screen_retriever_ffi.dart' as screen_retriever_ffi;
+import 'package:screen_retriever_ffi/screen_retriever_ffi.dart'
+    as screen_retriever_ffi;
+import 'package:screen_retriever_ffi/screen_retriever_ffi_bindings_generated.dart';
+
+extension DisplayExtension on Display {
+  Map<String, dynamic> toJson() {
+    return {
+      'id': unnamed,
+      'name': unnamed1,
+      'width': width,
+      'height': height,
+      'visiblePositionX': visiblePositionX,
+      'visiblePositionY': visiblePositionY,
+      'visibleWidth': visibleWidth,
+      'visibleHeight': visibleHeight,
+      'scaleFactor': scaleFactor,
+    };
+  }
+}
 
 void main() {
   runApp(const MyApp());
@@ -17,12 +37,16 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late int sumResult;
   late Future<int> sumAsyncResult;
+  late Display primaryDisplay;
+  late int allDisplays;
 
   @override
   void initState() {
     super.initState();
     sumResult = screen_retriever_ffi.sum(1, 2);
     sumAsyncResult = screen_retriever_ffi.sumAsync(3, 4);
+    primaryDisplay = screen_retriever_ffi.getPrimaryDisplay();
+    allDisplays = screen_retriever_ffi.getAllDisplays();
   }
 
   @override
@@ -63,6 +87,18 @@ class _MyAppState extends State<MyApp> {
                       textAlign: TextAlign.center,
                     );
                   },
+                ),
+                spacerSmall,
+                Text(
+                  'primaryDisplay = ${json.encode(primaryDisplay.toJson())}',
+                  style: textStyle,
+                  textAlign: TextAlign.center,
+                ),
+                spacerSmall,
+                Text(
+                  'allDisplays = $allDisplays',
+                  style: textStyle,
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
