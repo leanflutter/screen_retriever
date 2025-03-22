@@ -6,7 +6,9 @@ cmake_minimum_required(VERSION 3.10)
 project(screen_retriever_ffi_library VERSION 0.0.1 LANGUAGES CXX)
 
 # Platform-specific source files
-if (APPLE)
+if (LINUX)
+  set(PLATFORM_SOURCES "screen_retriever_linux.cpp")
+elseif (APPLE)
   set(PLATFORM_SOURCES "screen_retriever_macos.cpp")
 elseif (WIN32)
   set(PLATFORM_SOURCES "screen_retriever_windows.cpp")
@@ -21,7 +23,7 @@ add_library(screen_retriever_ffi SHARED
 )
 
 set_target_properties(screen_retriever_ffi PROPERTIES
-  PUBLIC_HEADER "screen_retriever.h;screen_retriever_ffi.h;screen_retriever_macos.h;screen_retriever_windows.h;"
+  PUBLIC_HEADER "screen_retriever.h;screen_retriever_ffi.h;screen_retriever_linux.h,screen_retriever_macos.h;screen_retriever_windows.h;"
   OUTPUT_NAME "screen_retriever_ffi"
 )
 

@@ -6,6 +6,8 @@
 #include "screen_retriever_macos.h"
 #elif defined(_WIN32)
 #include "screen_retriever_windows.h"
+#elif defined(__linux__)
+#include "screen_retriever_linux.h"
 #endif
 
 // Global instance of ScreenRetriever
@@ -18,6 +20,8 @@ void initialize_screen_retriever() {
       g_screen_retriever = new ScreenRetrieverMacOS();
     #elif defined(_WIN32)
       g_screen_retriever = new ScreenRetrieverWindows();
+    #elif defined(__linux__)
+      g_screen_retriever = new ScreenRetrieverLinux();
     #else
       // Add other platform implementations as needed
       std::cerr << "Unsupported platform" << std::endl;
