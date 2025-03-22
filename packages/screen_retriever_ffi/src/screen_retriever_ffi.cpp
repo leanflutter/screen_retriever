@@ -49,17 +49,24 @@ FFI_PLUGIN_EXPORT int sum_long_running(int a, int b) {
   return a + b;
 }
 
-FFI_PLUGIN_EXPORT struct Display* get_primary_display() {
+FFI_PLUGIN_EXPORT struct Display get_primary_display() {
   initialize_screen_retriever();
   if (g_screen_retriever != nullptr) {
     // Get primary display information
     Display primaryDisplay = g_screen_retriever->GetPrimaryDisplay();
     std::cout << "Primary display: " << primaryDisplay.id << std::endl;
+    std::cout << "Primary display: " << primaryDisplay.name << std::endl;
+    std::cout << "Primary display: " << primaryDisplay.width << std::endl;
+    std::cout << "Primary display: " << primaryDisplay.height << std::endl;
+    std::cout << "Primary display: " << primaryDisplay.visiblePositionX << std::endl;
+    std::cout << "Primary display: " << primaryDisplay.visiblePositionY << std::endl;
+    std::cout << "Primary display: " << primaryDisplay.visibleWidth << std::endl;
+    std::cout << "Primary display: " << primaryDisplay.visibleHeight << std::endl;
     // In a real implementation, you would convert this to a format that can be
     // passed back to Dart. For the sample, we just return success (1).
-    return &primaryDisplay;
+    return primaryDisplay;
   }
-  return nullptr;
+  return Display();
 }
 
 FFI_PLUGIN_EXPORT int get_all_displays() {

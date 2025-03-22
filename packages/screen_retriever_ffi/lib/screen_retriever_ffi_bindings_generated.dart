@@ -65,16 +65,14 @@ class ScreenRetrieverFfiBindings {
       _sum_long_runningPtr.asFunction<int Function(int, int)>();
 
   /// Get primary display
-  ffi.Pointer<Display> get_primary_display() {
+  Display get_primary_display() {
     return _get_primary_display();
   }
 
   late final _get_primary_displayPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<Display> Function()>>(
-        'get_primary_display',
-      );
+      _lookup<ffi.NativeFunction<Display Function()>>('get_primary_display');
   late final _get_primary_display =
-      _get_primary_displayPtr.asFunction<ffi.Pointer<Display> Function()>();
+      _get_primary_displayPtr.asFunction<Display Function()>();
 
   /// Get all displays
   int get_all_displays() {
@@ -120,11 +118,9 @@ class ScreenRetrieverFfiBindings {
 
 /// Representation of a display
 final class Display extends ffi.Struct {
-  @ffi.Int()
-  external int unnamed;
+  external ffi.Pointer<ffi.Char> id;
 
-  @ffi.Int()
-  external int unnamed1;
+  external ffi.Pointer<ffi.Char> name;
 
   @ffi.Double()
   external double width;

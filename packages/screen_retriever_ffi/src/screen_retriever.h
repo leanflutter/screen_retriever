@@ -1,12 +1,11 @@
 #pragma once
 
-#include <string>
 #include <vector>
 
 // Representation of a display
 struct Display {
-  std::string id;
-  std::string name;
+  char* id;
+  char* name;
   double width;
   double height;
   double visiblePositionX;

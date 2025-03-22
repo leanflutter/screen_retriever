@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:ffi/ffi.dart';
 
 import 'package:screen_retriever_ffi/screen_retriever_ffi.dart'
     as screen_retriever_ffi;
@@ -10,8 +11,8 @@ import 'package:screen_retriever_ffi/screen_retriever_ffi_bindings_generated.dar
 extension DisplayExtension on Display {
   Map<String, dynamic> toJson() {
     return {
-      'id': unnamed,
-      'name': unnamed1,
+      'id': id.cast<Utf8>().toDartString(),
+      'name': name.cast<Utf8>().toDartString(),
       'width': width,
       'height': height,
       'visiblePositionX': visiblePositionX,

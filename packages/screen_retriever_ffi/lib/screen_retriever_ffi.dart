@@ -8,10 +8,8 @@ import 'screen_retriever_ffi_bindings_generated.dart';
 
 Display getPrimaryDisplay() {
   final pointer = _bindings.get_primary_display();
-  if (pointer == nullptr) {
-    throw Exception('Failed to get primary display');
-  }
-  return pointer.ref;
+
+  return pointer;
 }
 
 int getAllDisplays() => _bindings.get_all_displays();
