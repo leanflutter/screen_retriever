@@ -13,11 +13,6 @@ This plugin allows Flutter desktop apps to Retrieve information about screen siz
 
 ---
 
-## 🚀 Check out FastForge
-
-**[FastForge](https://fastforge.dev/)** - A powerful tool for accelerating Flutter development.
-Build beautiful, responsive applications with ease. Try it today!
-
 ---
 
 English | [简体中文](./README-ZH.md)
