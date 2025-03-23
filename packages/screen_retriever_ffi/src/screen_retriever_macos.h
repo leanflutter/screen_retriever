@@ -1,7 +1,7 @@
 #pragma once
 
-#include "screen_retriever.h"
 #include <iostream>
+#include "screen_retriever.h"
 
 // Force __OBJC__ to be defined if not already
 #ifndef __OBJC__
@@ -19,9 +19,9 @@ class ScreenRetrieverMacOS : public ScreenRetriever {
 
   CursorPoint GetCursorScreenPoint() override;
   Display GetPrimaryDisplay() override;
-  std::vector<Display> GetAllDisplays() override;
-  
+  DisplayList GetAllDisplays() override;
+
  private:
   // Helper method to create Display struct from NSScreen
   Display CreateDisplayFromNSScreen(NSScreen* screen, bool isMainScreen);
-}; 
+};

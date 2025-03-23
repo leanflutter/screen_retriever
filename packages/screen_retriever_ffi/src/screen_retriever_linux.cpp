@@ -12,7 +12,7 @@ ScreenRetrieverLinux::~ScreenRetrieverLinux() {
 }
 
 CursorPoint ScreenRetrieverLinux::GetCursorScreenPoint() {
-  // Empty implementation 
+  // Empty implementation
   CursorPoint point;
   point.x = 0.0;
   point.y = 0.0;
@@ -34,9 +34,11 @@ Display ScreenRetrieverLinux::GetPrimaryDisplay() {
   return display;
 }
 
-std::vector<Display> ScreenRetrieverLinux::GetAllDisplays() {
+DisplayList ScreenRetrieverLinux::GetAllDisplays() {
   // Empty implementation
-  std::vector<Display> displays;
-  displays.push_back(GetPrimaryDisplay());
-  return displays;
-} 
+  DisplayList displayList;
+  displayList.displays = new Display[1];
+  displayList.displays[0] = GetPrimaryDisplay();
+  displayList.count = 1;
+  return displayList;
+}

@@ -86,14 +86,14 @@ class ScreenRetrieverFfiBindings {
       _get_primary_displayPtr.asFunction<Display Function()>();
 
   /// Get all displays
-  int get_all_displays() {
+  DisplayList get_all_displays() {
     return _get_all_displays();
   }
 
   late final _get_all_displaysPtr =
-      _lookup<ffi.NativeFunction<ffi.Int Function()>>('get_all_displays');
+      _lookup<ffi.NativeFunction<DisplayList Function()>>('get_all_displays');
   late final _get_all_displays =
-      _get_all_displaysPtr.asFunction<int Function()>();
+      _get_all_displaysPtr.asFunction<DisplayList Function()>();
 
   /// Get the current cursor position
   int get_cursor_screen_point() {
@@ -150,6 +150,14 @@ final class Display extends ffi.Struct {
 
   @ffi.Double()
   external double scaleFactor;
+}
+
+/// Representation of a list of displays
+final class DisplayList extends ffi.Struct {
+  external ffi.Pointer<Display> displays;
+
+  @ffi.Int()
+  external int count;
 }
 
 /// Representation of a cursor position

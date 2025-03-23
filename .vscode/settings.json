@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.ejs": "html",
+        "*.mm": "cpp",
+        "stdexcept": "cpp",
+        "iostream": "cpp",
+        "__locale": "cpp",
+        "ios": "cpp",
+        "variant": "cpp"
+    }
+}

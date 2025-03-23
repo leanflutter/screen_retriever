@@ -15,6 +15,12 @@ struct Display {
   double scaleFactor;
 };
 
+// Representation of a list of displays
+struct DisplayList {
+  Display* displays;
+  int count;
+};
+
 // Representation of a cursor position
 struct CursorPoint {
   double x;
@@ -33,5 +39,5 @@ class ScreenRetriever {
   virtual Display GetPrimaryDisplay() = 0;
 
   // Get all displays information
-  virtual std::vector<Display> GetAllDisplays() = 0;
+  virtual DisplayList GetAllDisplays() = 0;
 };

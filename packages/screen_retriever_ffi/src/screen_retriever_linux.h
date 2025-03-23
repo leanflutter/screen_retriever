@@ -1,7 +1,7 @@
 #pragma once
 
-#include "screen_retriever.h"
 #include <iostream>
+#include "screen_retriever.h"
 
 // Linux implementation of ScreenRetriever
 class ScreenRetrieverLinux : public ScreenRetriever {
@@ -11,5 +11,5 @@ class ScreenRetrieverLinux : public ScreenRetriever {
 
   CursorPoint GetCursorScreenPoint() override;
   Display GetPrimaryDisplay() override;
-  std::vector<Display> GetAllDisplays() override;
-}; 
+  DisplayList GetAllDisplays() override;
+};

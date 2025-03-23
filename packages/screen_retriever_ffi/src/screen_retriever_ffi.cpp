@@ -13,19 +13,19 @@
 // Global instance of ScreenRetriever
 static ScreenRetriever* g_screen_retriever = nullptr;
 
-// Initialize the appropriate screen retriever based on platform
-void initialize_screen_retriever() {
+// Ensure the screen retriever is initialized
+void ensure_initialized() {
   if (g_screen_retriever == nullptr) {
-    #if defined(__APPLE__)
-      g_screen_retriever = new ScreenRetrieverMacOS();
-    #elif defined(_WIN32)
-      g_screen_retriever = new ScreenRetrieverWindows();
-    #elif defined(__linux__)
-      g_screen_retriever = new ScreenRetrieverLinux();
-    #else
-      // Add other platform implementations as needed
-      std::cerr << "Unsupported platform" << std::endl;
-    #endif
+#if defined(__APPLE__)
+    g_screen_retriever = new ScreenRetrieverMacOS();
+#elif defined(_WIN32)
+    g_screen_retriever = new ScreenRetrieverWindows();
+#elif defined(__linux__)
+    g_screen_retriever = new ScreenRetrieverLinux();
+#else
+    // Add other platform implementations as needed
+    std::cerr << "Unsupported platform" << std::endl;
+#endif
   }
 }
 
@@ -54,50 +54,33 @@ FFI_PLUGIN_EXPORT int sum_long_running(int a, int b) {
 }
 
 FFI_PLUGIN_EXPORT struct Display get_primary_display() {
-  initialize_screen_retriever();
-  if (g_screen_retriever != nullptr) {
-    // Get primary display information
-    Display primaryDisplay = g_screen_retriever->GetPrimaryDisplay();
-    std::cout << "Primary display: " << primaryDisplay.id << std::endl;
-    std::cout << "Primary display: " << primaryDisplay.name << std::endl;
-    std::cout << "Primary display: " << primaryDisplay.width << std::endl;
-    std::cout << "Primary display: " << primaryDisplay.height << std::endl;
-    std::cout << "Primary display: " << primaryDisplay.visiblePositionX << std::endl;
-    std::cout << "Primary display: " << primaryDisplay.visiblePositionY << std::endl;
-    std::cout << "Primary display: " << primaryDisplay.visibleSizeWidth << std::endl;
-    std::cout << "Primary display: " << primaryDisplay.visibleSizeHeight << std::endl;
-    // In a real implementation, you would convert this to a format that can be
-    // passed back to Dart. For the sample, we just return success (1).
-    return primaryDisplay;
+  ensure_initialized();
+  if (g_screen_retriever == nullptr) {
+    throw std::runtime_error("ScreenRetriever not initialized");
   }
-  return Display();
+  return g_screen_retriever->GetPrimaryDisplay();
 }
 
-FFI_PLUGIN_EXPORT int get_all_displays() {
-  initialize_screen_retriever();
-  if (g_screen_retriever != nullptr) {
-    // Get all displays information
-    std::vector<Display> displays = g_screen_retriever->GetAllDisplays();
-    // In a real implementation, you would convert this to a format that can be
-    // passed back to Dart. For the sample, we just return the count of
-    // displays.
-    std::cout << "All displays: " << displays.size() << std::endl;
-    return static_cast<int>(displays.size());
+FFI_PLUGIN_EXPORT struct DisplayList get_all_displays() {
+  ensure_initialized();
+  if (g_screen_retriever == nullptr) {
+    throw std::runtime_error("ScreenRetriever not initialized");
   }
-  return 0;
+  // Get all displays information
+  return g_screen_retriever->GetAllDisplays();
 }
 
 // Get the current cursor position
 FFI_PLUGIN_EXPORT int get_cursor_screen_point() {
-  initialize_screen_retriever();
-  if (g_screen_retriever != nullptr) {
-    // Get cursor position
-    CursorPoint cursorPoint = g_screen_retriever->GetCursorScreenPoint();
-    std::cout << "Cursor position: " << cursorPoint.x << ", " << cursorPoint.y
-              << std::endl;
-    // In a real implementation, you would convert this to a format that can be
-    // passed back to Dart. For the sample, we just return success (1).
-    return 1;
+  ensure_initialized();
+  if (g_screen_retriever == nullptr) {
+    throw std::runtime_error("ScreenRetriever not initialized");
   }
-  return 0;
+  // Get cursor position
+  CursorPoint cursorPoint = g_screen_retriever->GetCursorScreenPoint();
+  std::cout << "Cursor position: " << cursorPoint.x << ", " << cursorPoint.y
+            << std::endl;
+  // In a real implementation, you would convert this to a format that can be
+  // passed back to Dart. For the sample, we just return success (1).
+  return 1;
 }

@@ -1,7 +1,7 @@
 #include "screen_retriever_macos.h"
+#include <cstring>
 #include <iostream>
 #include <string>
-#include <cstring>
 
 // Force __OBJC__ to be defined if not already
 #ifndef __OBJC__
@@ -32,58 +32,64 @@ ScreenRetrieverMacOS::~ScreenRetrieverMacOS() {
 
 CursorPoint ScreenRetrieverMacOS::GetCursorScreenPoint() {
   CursorPoint point;
-  
+
   // Get the current mouse position
   NSPoint mouseLocation = [NSEvent mouseLocation];
   point.x = mouseLocation.x;
   point.y = mouseLocation.y;
-  
+
   return point;
 }
 
 Display ScreenRetrieverMacOS::GetPrimaryDisplay() {
   // Get the primary display (first screen)
-  NSArray<NSScreen *>* screens = [NSScreen screens];
+  NSArray<NSScreen*>* screens = [NSScreen screens];
   return CreateDisplayFromNSScreen(screens[0], true);
 }
 
-std::vector<Display> ScreenRetrieverMacOS::GetAllDisplays() {
-  std::vector<Display> displays;
-  
+DisplayList ScreenRetrieverMacOS::GetAllDisplays() {
+  DisplayList displayList;
+
   // Get all screens
-  NSArray<NSScreen *>* screens = [NSScreen screens];
-  bool isMainScreen = true;
-  
+  NSArray<NSScreen*>* screens = [NSScreen screens];
+  bool isFirstScreen = true;
+
+  displayList.displays = new Display[screens.count];
+  displayList.count = screens.count;
+  int index = 0;
   for (NSScreen* screen in screens) {
-    displays.push_back(CreateDisplayFromNSScreen(screen, isMainScreen));
-    isMainScreen = false;  // Only the first screen is the main screen
+    displayList.displays[index] = CreateDisplayFromNSScreen(screen, isFirstScreen);
+    index++;
+    isFirstScreen = false;  // Only the first screen is the main screen
   }
-  
-  return displays;
+
+  return displayList;
 }
 
-Display ScreenRetrieverMacOS::CreateDisplayFromNSScreen(NSScreen* screen, bool isPrimary) {
+Display ScreenRetrieverMacOS::CreateDisplayFromNSScreen(NSScreen* screen, bool isFirstScreen) {
   Display display;
-  
+
   // Get screen details
   NSRect frame = [screen frame];
   NSRect visibleFrame = [screen visibleFrame];
   CGFloat scaleFactor = [screen backingScaleFactor];
-  
+
   // Set unique identifier for the screen using CGDirectDisplayID
-  CGDirectDisplayID displayID = [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] unsignedIntValue];
+  CGDirectDisplayID displayID =
+      [[[screen deviceDescription] objectForKey:@"NSScreenNumber"] unsignedIntValue];
   NSString* screenId = [NSString stringWithFormat:@"%@", @(displayID)];
   display.id = ConvertNSStringToCString(screenId);
-  
+
   // Set display name - use localizedName on macOS 10.15+
   NSString* displayName;
   if (@available(macOS 10.15, *)) {
     displayName = [screen localizedName];
   } else {
-    displayName = isPrimary ? @"Primary Display" : [NSString stringWithFormat:@"Display %@", @(displayID)];
+    displayName = isFirstScreen ? @"Primary Display"
+                                : [NSString stringWithFormat:@"Display %@", @(displayID)];
   }
   display.name = ConvertNSStringToCString(displayName);
-  
+
   // Set size and position properties
   display.width = frame.size.width;
   display.height = frame.size.height;
@@ -92,6 +98,6 @@ Display ScreenRetrieverMacOS::CreateDisplayFromNSScreen(NSScreen* screen, bool i
   display.visibleSizeWidth = visibleFrame.size.width;
   display.visibleSizeHeight = visibleFrame.size.height;
   display.scaleFactor = scaleFactor;
-  
+
   return display;
-} 
+}

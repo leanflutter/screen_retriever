@@ -12,7 +12,10 @@ Display getPrimaryDisplay() {
   return pointer;
 }
 
-int getAllDisplays() => _bindings.get_all_displays();
+List<Display> getAllDisplays() {
+  final displayList = _bindings.get_all_displays();
+  return List.generate(displayList.count, (i) => displayList.displays[i]);
+}
 
 int getCursorScreenPoint() => _bindings.get_cursor_screen_point();
 

@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
   late int sumResult;
   late Future<int> sumAsyncResult;
   late Display primaryDisplay;
-  late int allDisplays;
+  late List<Display> allDisplays;
 
   @override
   void initState() {

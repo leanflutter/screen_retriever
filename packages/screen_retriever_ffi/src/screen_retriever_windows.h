@@ -11,5 +11,5 @@ class ScreenRetrieverWindows : public ScreenRetriever {
 
   CursorPoint GetCursorScreenPoint() override;
   Display GetPrimaryDisplay() override;
-  std::vector<Display> GetAllDisplays() override;
+  DisplayList GetAllDisplays() override;
 }; 

@@ -34,9 +34,11 @@ Display ScreenRetrieverWindows::GetPrimaryDisplay() {
   return display;
 }
 
-std::vector<Display> ScreenRetrieverWindows::GetAllDisplays() {
+DisplayList ScreenRetrieverWindows::GetAllDisplays() {
   // Empty implementation
-  std::vector<Display> displays;
-  displays.push_back(GetPrimaryDisplay());
-  return displays;
+  DisplayList displayList;
+  displayList.displays = new Display[1];
+  displayList.displays[0] = GetPrimaryDisplay();
+  displayList.count = 1;
+  return displayList;
 } 
