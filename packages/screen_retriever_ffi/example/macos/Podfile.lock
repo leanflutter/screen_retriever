@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
-  screen_retriever_ffi: 3c671a3502aca6d21040fa21a174f689009343e5
+  screen_retriever_ffi: a709a16c7c8d844e0516379dfbccbe0ef7eb6c76
 
 PODFILE CHECKSUM: 7eb978b976557c8c1cd717d8185ec483fd090a82
 

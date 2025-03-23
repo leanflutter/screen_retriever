@@ -18,7 +18,7 @@ A new Flutter FFI plugin project.
   # paths, so Classes contains a forwarder C file that relatively imports
   # `../src/*` so that the C sources can be shared among all target platforms.
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*', '../src/**/*'
+  s.source_files = 'Classes/**/*.{cpp,h,mm}', '../src/**/*.{cpp,h,mm}'
 
   # If your plugin requires a privacy manifest, for example if it collects user
   # data, update the PrivacyInfo.xcprivacy file to describe your plugin's
@@ -27,8 +27,25 @@ A new Flutter FFI plugin project.
   # s.resource_bundles = {'screen_retriever_ffi_privacy' => ['screen_retriever_ffi/Sources/screen_retriever_ffi/PrivacyInfo.xcprivacy']}
 
   s.dependency 'FlutterMacOS'
+  
+  # Add Cocoa framework dependency
+  s.framework = 'Cocoa'
 
   s.platform = :osx, '10.11'
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
+  s.pod_target_xcconfig = { 
+    'DEFINES_MODULE' => 'YES',
+    # Configure to compile .cpp files as Objective-C++
+    'CLANG_ENABLE_OBJC_ARC' => 'YES',
+    'CLANG_CXX_LANGUAGE_STANDARD' => 'c++17',
+    'CLANG_CXX_LIBRARY' => 'libc++',
+    'OTHER_CPLUSPLUSFLAGS' => '-std=c++17 -D__OBJC__=1',
+    # Enable Objective-C++ compilation for .cpp files
+    'OTHER_CFLAGS' => '-DOBJC_OLD_DISPATCH_PROTOTYPES=0 -D__OBJC__=1',
+    'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) __OBJC__=1',
+    'MACOSX_DEPLOYMENT_TARGET' => '10.11'
+  }
   s.swift_version = '5.0'
+  
+  # Explicitly set file types to compile as Objective-C++
+  s.compiler_flags = '-x objective-c++'
 end

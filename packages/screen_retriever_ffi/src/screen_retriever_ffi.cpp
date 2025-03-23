@@ -64,8 +64,8 @@ FFI_PLUGIN_EXPORT struct Display get_primary_display() {
     std::cout << "Primary display: " << primaryDisplay.height << std::endl;
     std::cout << "Primary display: " << primaryDisplay.visiblePositionX << std::endl;
     std::cout << "Primary display: " << primaryDisplay.visiblePositionY << std::endl;
-    std::cout << "Primary display: " << primaryDisplay.visibleWidth << std::endl;
-    std::cout << "Primary display: " << primaryDisplay.visibleHeight << std::endl;
+    std::cout << "Primary display: " << primaryDisplay.visibleSizeWidth << std::endl;
+    std::cout << "Primary display: " << primaryDisplay.visibleSizeHeight << std::endl;
     // In a real implementation, you would convert this to a format that can be
     // passed back to Dart. For the sample, we just return success (1).
     return primaryDisplay;

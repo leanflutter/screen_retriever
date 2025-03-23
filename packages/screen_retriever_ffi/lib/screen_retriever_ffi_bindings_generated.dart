@@ -15,21 +15,21 @@ import 'dart:ffi' as ffi;
 class ScreenRetrieverFfiBindings {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
-  _lookup;
+      _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
   ScreenRetrieverFfiBindings(ffi.DynamicLibrary dynamicLibrary)
-    : _lookup = dynamicLibrary.lookup;
+      : _lookup = dynamicLibrary.lookup;
 
   /// The symbols are looked up with [lookup].
   ScreenRetrieverFfiBindings.fromLookup(
-    ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName) lookup,
-  ) : _lookup = lookup;
+      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
+          lookup)
+      : _lookup = lookup;
 
   /// Abstract base class for ScreenRetriever
-  late final ffi.Pointer<ffi.Int> _ScreenRetriever = _lookup<ffi.Int>(
-    'ScreenRetriever',
-  );
+  late final ffi.Pointer<ffi.Int> _ScreenRetriever =
+      _lookup<ffi.Int>('ScreenRetriever');
 
   int get ScreenRetriever => _ScreenRetriever.value;
 
@@ -40,8 +40,14 @@ class ScreenRetrieverFfiBindings {
   /// For very short-lived functions, it is fine to call them on the main isolate.
   /// They will block the Dart execution while running the native function, so
   /// only do this for native functions which are guaranteed to be short-lived.
-  int sum(int a, int b) {
-    return _sum(a, b);
+  int sum(
+    int a,
+    int b,
+  ) {
+    return _sum(
+      a,
+      b,
+    );
   }
 
   late final _sumPtr =
@@ -53,14 +59,19 @@ class ScreenRetrieverFfiBindings {
   /// Do not call these kind of native functions in the main isolate. They will
   /// block Dart execution. This will cause dropped frames in Flutter applications.
   /// Instead, call these native functions on a separate isolate.
-  int sum_long_running(int a, int b) {
-    return _sum_long_running(a, b);
+  int sum_long_running(
+    int a,
+    int b,
+  ) {
+    return _sum_long_running(
+      a,
+      b,
+    );
   }
 
   late final _sum_long_runningPtr =
       _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>(
-        'sum_long_running',
-      );
+          'sum_long_running');
   late final _sum_long_running =
       _sum_long_runningPtr.asFunction<int Function(int, int)>();
 
@@ -91,24 +102,21 @@ class ScreenRetrieverFfiBindings {
 
   late final _get_cursor_screen_pointPtr =
       _lookup<ffi.NativeFunction<ffi.Int Function()>>(
-        'get_cursor_screen_point',
-      );
+          'get_cursor_screen_point');
   late final _get_cursor_screen_point =
       _get_cursor_screen_pointPtr.asFunction<int Function()>();
 
   /// macOS implementation of ScreenRetriever
-  late final ffi.Pointer<ffi.Int> _ScreenRetrieverMacOS = _lookup<ffi.Int>(
-    'ScreenRetrieverMacOS',
-  );
+  late final ffi.Pointer<ffi.Int> _ScreenRetrieverMacOS =
+      _lookup<ffi.Int>('ScreenRetrieverMacOS');
 
   int get ScreenRetrieverMacOS => _ScreenRetrieverMacOS.value;
 
   set ScreenRetrieverMacOS(int value) => _ScreenRetrieverMacOS.value = value;
 
   /// Windows implementation of ScreenRetriever
-  late final ffi.Pointer<ffi.Int> _ScreenRetrieverWindows = _lookup<ffi.Int>(
-    'ScreenRetrieverWindows',
-  );
+  late final ffi.Pointer<ffi.Int> _ScreenRetrieverWindows =
+      _lookup<ffi.Int>('ScreenRetrieverWindows');
 
   int get ScreenRetrieverWindows => _ScreenRetrieverWindows.value;
 
@@ -135,10 +143,10 @@ final class Display extends ffi.Struct {
   external double visiblePositionY;
 
   @ffi.Double()
-  external double visibleWidth;
+  external double visibleSizeWidth;
 
   @ffi.Double()
-  external double visibleHeight;
+  external double visibleSizeHeight;
 
   @ffi.Double()
   external double scaleFactor;
@@ -152,3 +160,5 @@ final class CursorPoint extends ffi.Struct {
   @ffi.Double()
   external double y;
 }
+
+const int __OBJC__ = 1;

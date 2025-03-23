@@ -10,8 +10,8 @@ struct Display {
   double height;
   double visiblePositionX;
   double visiblePositionY;
-  double visibleWidth;
-  double visibleHeight;
+  double visibleSizeWidth;
+  double visibleSizeHeight;
   double scaleFactor;
 };
 

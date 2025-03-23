@@ -28,8 +28,8 @@ Display ScreenRetrieverLinux::GetPrimaryDisplay() {
   display.height = 1080.0;
   display.visiblePositionX = 0.0;
   display.visiblePositionY = 0.0;
-  display.visibleWidth = 1920.0;
-  display.visibleHeight = 1080.0;
+  display.visibleSizeWidth = 1920.0;
+  display.visibleSizeHeight = 1080.0;
   display.scaleFactor = 1.0;
   return display;
 }

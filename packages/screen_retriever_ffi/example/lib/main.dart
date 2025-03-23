@@ -17,8 +17,8 @@ extension DisplayExtension on Display {
       'height': height,
       'visiblePositionX': visiblePositionX,
       'visiblePositionY': visiblePositionY,
-      'visibleWidth': visibleWidth,
-      'visibleHeight': visibleHeight,
+      'visibleSizeWidth': visibleSizeWidth,
+      'visibleSizeHeight': visibleSizeHeight,
       'scaleFactor': scaleFactor,
     };
   }
