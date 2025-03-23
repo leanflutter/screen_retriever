@@ -1,3 +1,5 @@
+> **🚀 Ship Your App Faster**: Try [Fastforge](https://fastforge.dev) - The simplest way to build, package and distribute your Flutter apps.
+
 # screen_retriever
 
 [![pub version][pub-image]][pub-url] [![][discord-image]][discord-url]
@@ -8,6 +10,13 @@
 [discord-url]: https://discord.gg/zPa6EZ2jqb
 
 This plugin allows Flutter desktop apps to Retrieve information about screen size, displays, cursor position, etc.
+
+---
+
+## 🚀 Check out FastForge
+
+**[FastForge](https://fastforge.dev/)** - A powerful tool for accelerating Flutter development.
+Build beautiful, responsive applications with ease. Try it today!
 
 ---
 
@@ -112,6 +121,7 @@ class _HomePageState extends State<HomePage> with ScreenListener {
 ## Who's using it?
 
 - [Biyi (比译)](https://biyidev.com/) - A convenient translation and dictionary app.
+- [FastForge](https://fastforge.dev/) - An efficient tool for rapid application development and prototyping.
 
 ## API
 
