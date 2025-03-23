@@ -38,10 +38,10 @@ A new Flutter FFI plugin project.
     'CLANG_ENABLE_OBJC_ARC' => 'YES',
     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++17',
     'CLANG_CXX_LIBRARY' => 'libc++',
-    'OTHER_CPLUSPLUSFLAGS' => '-std=c++17 -D__OBJC__=1',
+    'OTHER_CPLUSPLUSFLAGS' => '-std=c++17',
     # Enable Objective-C++ compilation for .cpp files
-    'OTHER_CFLAGS' => '-DOBJC_OLD_DISPATCH_PROTOTYPES=0 -D__OBJC__=1',
-    'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) __OBJC__=1',
+    'OTHER_CFLAGS' => '-DOBJC_OLD_DISPATCH_PROTOTYPES=0',
+    'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited)',
     'MACOSX_DEPLOYMENT_TARGET' => '10.11'
   }
   s.swift_version = '5.0'

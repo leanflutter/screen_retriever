@@ -3,11 +3,6 @@
 #include <iostream>
 #include <string>
 
-// Force __OBJC__ to be defined if not already
-#ifndef __OBJC__
-#define __OBJC__ 1
-#endif
-
 // Import Cocoa headers
 #import <Cocoa/Cocoa.h>
 
@@ -54,8 +49,9 @@ DisplayList ScreenRetrieverMacOS::GetAllDisplays() {
   NSArray<NSScreen*>* screens = [NSScreen screens];
   bool isFirstScreen = true;
 
-  displayList.displays = new Display[screens.count];
-  displayList.count = screens.count;
+  int count = (int) screens.count;
+  displayList.displays = new Display[count];
+  displayList.count = count;
   int index = 0;
   for (NSScreen* screen in screens) {
     displayList.displays[index] = CreateDisplayFromNSScreen(screen, isFirstScreen);

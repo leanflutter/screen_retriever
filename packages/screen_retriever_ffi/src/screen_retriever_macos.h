@@ -3,11 +3,6 @@
 #include <iostream>
 #include "screen_retriever.h"
 
-// Force __OBJC__ to be defined if not already
-#ifndef __OBJC__
-#define __OBJC__ 1
-#endif
-
 // Import Cocoa headers
 #import <Cocoa/Cocoa.h>
 

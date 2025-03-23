@@ -168,5 +168,3 @@ final class CursorPoint extends ffi.Struct {
   @ffi.Double()
   external double y;
 }
-
-const int __OBJC__ = 1;
