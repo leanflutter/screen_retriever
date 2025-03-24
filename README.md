@@ -23,6 +23,7 @@ English | [简体中文](./README-ZH.md)
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Platform Support](#platform-support)
+- [Documentation](#documentation)
 - [Quick Start](#quick-start)
   - [Installation](#installation)
   - [Usage](#usage)
@@ -39,6 +40,12 @@ English | [简体中文](./README-ZH.md)
 | Linux | macOS | Windows |
 | :---: | :---: | :-----: |
 |  ✔️   |  ✔️   |   ✔️    |
+
+## Documentation
+
+- [Quick Start](https://leanflutter.dev/documentation/screen_retriever/quick-start)
+- [API Reference](https://pub.dev/documentation/screen_retriever/latest/screen_retriever/)
+- [Changelog](https://pub.dev/packages/screen_retriever/changelog)
 
 ## Quick Start
 

@@ -21,6 +21,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [平台支持](#%E5%B9%B3%E5%8F%B0%E6%94%AF%E6%8C%81)
+- [文档](#%E6%96%87%E6%A1%A3)
 - [快速开始](#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)
   - [安装](#%E5%AE%89%E8%A3%85)
   - [用法](#%E7%94%A8%E6%B3%95)
@@ -37,6 +38,12 @@
 | Linux | macOS | Windows |
 | :---: | :---: | :-----: |
 |  ✔️   |  ✔️   |   ✔️    |
+
+## 文档
+
+- [快速开始](https://leanflutter.dev/zh/documentation/screen_retriever/quick-start)
+- [API 参考](https://pub.dev/documentation/screen_retriever/latest/screen_retriever/)
+- [更新日志](https://pub.dev/packages/screen_retriever/changelog)
 
 ## 快速开始
 
