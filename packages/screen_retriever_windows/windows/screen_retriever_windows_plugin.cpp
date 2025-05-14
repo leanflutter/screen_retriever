@@ -90,6 +90,8 @@ std::optional<LRESULT> ScreenRetrieverWindowsPlugin::HandleWindowProc(
         args[flutter::EncodableValue("type")] = "display-added";
       } else if (currentMonitorCount < display_count_) {
         args[flutter::EncodableValue("type")] = "display-removed";
+      } else {
+        args[flutter::EncodableValue("type")] = "display-metrics-changed";
       }
       display_count_ = currentMonitorCount;
       if (event_sink_) {
