@@ -1,4 +1,6 @@
-> **🚀 快速发布您的应用**: 试试 [Fastforge](https://fastforge.dev) - 构建、打包和分发您的 Flutter 应用最简单的方式。
+> **⚠️ 迁移通知**: 本插件正在迁移到 [libnativeapi/nativeapi-flutter](https://github.com/libnativeapi/nativeapi-flutter)
+>
+> 新版本基于统一的 C++ 核心库（[libnativeapi/nativeapi](https://github.com/libnativeapi/nativeapi)），提供更完整、一致的跨平台原生 API 支持。
 
 # screen_retriever
 
