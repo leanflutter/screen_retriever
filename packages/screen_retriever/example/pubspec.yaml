@@ -9,7 +9,7 @@ dependencies:
   bot_toast: ^4.1.3
   flutter:
     sdk: flutter
-  hotkey_manager: ^0.1.8
+
   screen_retriever:
     # When depending on this package from a real application you should use:
     #   screen_retriever: ^x.y.z

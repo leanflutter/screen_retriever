@@ -1,6 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:hotkey_manager/hotkey_manager.dart';
+
 import 'package:screen_retriever/screen_retriever.dart';
 import 'package:screen_retriever_example/widgets/display_card.dart';
 
@@ -47,13 +47,6 @@ class _HomePageState extends State<HomePage> with ScreenListener {
   void initState() {
     screenRetriever.addListener(this);
     super.initState();
-    hotKeyManager.unregisterAll();
-    hotKeyManager.register(
-      HotKey(KeyCode.keyD, modifiers: [KeyModifier.alt]),
-      keyDownHandler: (_) {
-        _handleGetCursorScreenPoint();
-      },
-    );
     _getDisplays();
   }
 
@@ -115,7 +108,6 @@ class _HomePageState extends State<HomePage> with ScreenListener {
         Card(
           child: ListTile(
             title: const Text('getCursorScreenPoint'),
-            trailing: const Text('Alt+D'),
             onTap: _handleGetCursorScreenPoint,
           ),
         ),

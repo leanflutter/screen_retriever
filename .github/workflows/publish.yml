@@ -1,0 +1,87 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+*"
+
+jobs:
+  publish:
+    name: Publish to pub.dev
+    permissions:
+      id-token: write # Required for requesting the JWT
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Set up the Dart SDK and provision the OIDC token used for publishing.
+      - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260
+
+      # Download Flutter SDK - needed for publishing Flutter packages.
+      - uses: flutter-actions/setup-flutter@18c66a64fb6f6d3338c63cabbc5cd6da395e7f1d
+
+      # Publish screen_retriever_platform_interface (no package dependencies)
+      - name: Install dependencies (screen_retriever_platform_interface)
+        run: dart pub get
+        working-directory: packages/screen_retriever_platform_interface
+
+      - name: Publish - dry run (screen_retriever_platform_interface)
+        run: dart pub publish --dry-run
+        working-directory: packages/screen_retriever_platform_interface
+
+      - name: Publish screen_retriever_platform_interface
+        run: dart pub publish -f
+        working-directory: packages/screen_retriever_platform_interface
+
+      # Publish screen_retriever_linux
+      - name: Install dependencies (screen_retriever_linux)
+        run: dart pub get
+        working-directory: packages/screen_retriever_linux
+
+      - name: Publish - dry run (screen_retriever_linux)
+        run: dart pub publish --dry-run
+        working-directory: packages/screen_retriever_linux
+
+      - name: Publish screen_retriever_linux
+        run: dart pub publish -f
+        working-directory: packages/screen_retriever_linux
+
+      # Publish screen_retriever_macos
+      - name: Install dependencies (screen_retriever_macos)
+        run: dart pub get
+        working-directory: packages/screen_retriever_macos
+
+      - name: Publish - dry run (screen_retriever_macos)
+        run: dart pub publish --dry-run
+        working-directory: packages/screen_retriever_macos
+
+      - name: Publish screen_retriever_macos
+        run: dart pub publish -f
+        working-directory: packages/screen_retriever_macos
+
+      # Publish screen_retriever_windows
+      - name: Install dependencies (screen_retriever_windows)
+        run: dart pub get
+        working-directory: packages/screen_retriever_windows
+
+      - name: Publish - dry run (screen_retriever_windows)
+        run: dart pub publish --dry-run
+        working-directory: packages/screen_retriever_windows
+
+      - name: Publish screen_retriever_windows
+        run: dart pub publish -f
+        working-directory: packages/screen_retriever_windows
+
+      # Publish screen_retriever (main federated plugin)
+      - name: Install dependencies (screen_retriever)
+        run: dart pub get
+        working-directory: packages/screen_retriever
+
+      - name: Publish - dry run (screen_retriever)
+        run: dart pub publish --dry-run
+        working-directory: packages/screen_retriever
+
+      - name: Publish screen_retriever
+        run: dart pub publish -f
+        working-directory: packages/screen_retriever
