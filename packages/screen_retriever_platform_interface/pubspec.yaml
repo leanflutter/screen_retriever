@@ -1,6 +1,6 @@
 name: screen_retriever_platform_interface
 description: A common platform interface for the screen_retriever plugin.
-version: 0.2.0
+version: 0.2.1
 homepage: https://github.com/leanflutter/screen_retriever/blob/main/packages/screen_retriever_platform_interface
 
 environment:

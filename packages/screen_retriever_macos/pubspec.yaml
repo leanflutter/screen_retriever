@@ -1,6 +1,6 @@
 name: screen_retriever_macos
 description: macOS implementation of the screen_retriever plugin.
-version: 0.2.0
+version: 0.2.1
 repository: https://github.com/leanflutter/screen_retriever/tree/main/packages/screen_retriever_macos
 
 environment:
