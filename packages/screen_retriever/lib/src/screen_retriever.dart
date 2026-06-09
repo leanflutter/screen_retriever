@@ -12,7 +12,8 @@ class ScreenRetriever {
 
   /// Handle screen events from the platform side.
   void _handleScreenEvent(event) {
-    String type = event['type'] as String;
+    final type = event['type'] as String?;
+    if (type == null) return;
     for (var listener in _listeners) {
       listener.onScreenEvent(type);
     }
