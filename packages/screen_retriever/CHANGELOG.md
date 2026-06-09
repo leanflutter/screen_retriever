@@ -1,3 +1,9 @@
+## 0.2.1
+
+* Add Swift Package Manager support for macOS
+* Fix null check in `ScreenRetriever._handleScreenEvent` (#27)
+* Replace `mostly_reasonable_lints` with `flutter_lints`
+
 ## 0.2.0
 
 * Convert to federated plugin
