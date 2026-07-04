@@ -1,3 +1,8 @@
+## 0.2.2
+
+* Bump `screen_retriever_macos` to 0.2.2 with fixed Package.swift
+* Align all sub-packages to version 0.2.2
+
 ## 0.2.1
 
 * Add Swift Package Manager support for macOS
