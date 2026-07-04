@@ -9,11 +9,15 @@ let package = Package(
     products: [
         .library(name: "screen-retriever-macos", targets: ["screen_retriever_macos"])
     ],
-    dependencies: [],
+    dependencies: [
+        .package(name: "FlutterFramework", path: "../FlutterFramework")
+    ],
     targets: [
         .target(
             name: "screen_retriever_macos",
-            dependencies: [],
+            dependencies: [
+                .product(name: "FlutterFramework", package: "FlutterFramework")
+            ],
             path: "Classes"
         )
     ]
