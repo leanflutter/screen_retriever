@@ -7,7 +7,7 @@
 #include <flutter/plugin_registrar_windows.h>
 #include <flutter/standard_method_codec.h>
 
-#include <codecvt>
+#include <cmath>
 #include <map>
 #include <memory>
 #include <sstream>
@@ -102,7 +102,17 @@ std::optional<LRESULT> ScreenRetrieverWindowsPlugin::HandleWindowProc(
 }
 
 flutter::EncodableMap MonitorToEncodableMap(HMONITOR monitor) {
-  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+  // Helper lambda to convert wide strings (UTF-16) to UTF-8 using native Win32 API
+  auto wide_to_utf8 = [](const wchar_t* wstr) -> std::string {
+    if (!wstr || *wstr == L'\0') return "";
+    int size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, NULL, 0, NULL, NULL);
+    if (size_needed <= 0) return "";
+    
+    std::string result(size_needed, 0);
+    WideCharToMultiByte(CP_UTF8, 0, wstr, -1, &result[0], size_needed, NULL, NULL);
+    result.pop_back();
+    return result;
+  };
 
   MONITORINFOEX info;
   info.cbSize = sizeof(MONITORINFOEX);
@@ -156,14 +166,14 @@ flutter::EncodableMap MonitorToEncodableMap(HMONITOR monitor) {
       std::wstring deviceName(displayDevice.DeviceName);
       if (deviceName.find(info.szDevice) == 0) {
         display[flutter::EncodableValue("id")] = flutter::EncodableValue(
-            converter.to_bytes(displayDevice.DeviceID).c_str());
+            wide_to_utf8(displayDevice.DeviceID).c_str());
       }
     }
     deviceIndex++;
   }
 
   display[flutter::EncodableValue("name")] =
-      flutter::EncodableValue(converter.to_bytes(display_name).c_str());
+      flutter::EncodableValue(wide_to_utf8(display_name).c_str());
   display[flutter::EncodableValue("size")] = flutter::EncodableValue(size);
   display[flutter::EncodableValue("visibleSize")] =
       flutter::EncodableValue(visibleSize);
@@ -174,6 +184,7 @@ flutter::EncodableMap MonitorToEncodableMap(HMONITOR monitor) {
 
   return display;
 }
+
 
 BOOL CALLBACK MonitorRepresentationEnumProc(HMONITOR monitor,
                                             HDC hdc,
