@@ -1,4 +1,4 @@
-library screen_retriever_platform_interface;
+library;
 
 export 'src/display.dart';
 export 'src/screen_listener.dart';

@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> with ScreenListener {
     setState(() {});
   }
 
-  _handleGetCursorScreenPoint() async {
+  Future<void> _handleGetCursorScreenPoint() async {
     Offset point = await screenRetriever.getCursorScreenPoint();
     BotToast.showText(
       text: 'cursorScreenPoint: $point',

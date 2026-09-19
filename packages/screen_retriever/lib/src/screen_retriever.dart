@@ -11,7 +11,7 @@ class ScreenRetriever {
   ScreenRetrieverPlatform get _platform => ScreenRetrieverPlatform.instance;
 
   /// Handle screen events from the platform side.
-  void _handleScreenEvent(event) {
+  void _handleScreenEvent(dynamic event) {
     String type = event['type'] as String;
     for (var listener in _listeners) {
       listener.onScreenEvent(type);
