@@ -1,6 +1,6 @@
-> **⚠️ 迁移通知**: 本插件正在迁移到 [libnativeapi/nativeapi-flutter](https://github.com/libnativeapi/nativeapi-flutter)
->
-> 新版本基于统一的 C++ 核心库（[libnativeapi/nativeapi](https://github.com/libnativeapi/nativeapi)），提供更完整、一致的跨平台原生 API 支持。
+> **screen_retriever 基于 [nativeapi](https://github.com/libnativeapi/nativeapi) 构建**——它是统一的
+> C++ 核心库（[libnativeapi/nativeapi](https://github.com/libnativeapi/nativeapi)）的 Flutter 绑定，macOS、Windows、Linux
+> 共用同一套实现。从 0.2.x 升级？请看[从 0.2.x 升级](#从-02x-升级)。
 
 # screen_retriever
 
@@ -11,9 +11,8 @@
 [discord-image]: https://img.shields.io/discord/884679008049037342.svg
 [discord-url]: https://discord.gg/zPa6EZ2jqb
 
-这个插件允许 Flutter 桌面应用检索关于屏幕大小，显示，光标位置等信息。
-
----
+这个包让 Flutter 桌面应用读取显示器信息（尺寸、工作区、缩放比例）和光标位置，并在显示器
+接入、移除或变化时收到通知。
 
 [English](./README.md) | 简体中文
 
@@ -22,17 +21,18 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [平台支持](#%E5%B9%B3%E5%8F%B0%E6%94%AF%E6%8C%81)
-- [文档](#%E6%96%87%E6%A1%A3)
-- [快速开始](#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)
-  - [安装](#%E5%AE%89%E8%A3%85)
-  - [用法](#%E7%94%A8%E6%B3%95)
-  - [监听事件](#%E7%9B%91%E5%90%AC%E4%BA%8B%E4%BB%B6)
-- [谁在用使用它？](#%E8%B0%81%E5%9C%A8%E7%94%A8%E4%BD%BF%E7%94%A8%E5%AE%83)
+- [平台支持](#平台支持)
+- [快速开始](#快速开始)
+  - [安装](#安装)
+    - [要求](#要求)
+  - [用法](#用法)
+    - [从 0.2.x 升级](#从-02x-升级)
+    - [迁移到原生 API](#迁移到原生-api)
+- [谁在使用它？](#谁在使用它)
 - [API](#api)
-  - [ScreenRetriever](#screenretriever)
-- [贡献者 ✨](#%E8%B4%A1%E7%8C%AE%E8%80%85-)
-- [许可证](#%E8%AE%B8%E5%8F%AF%E8%AF%81)
+  - [原生 API](#原生-api)
+- [贡献者 ✨](#贡献者-)
+- [许可证](#许可证)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -42,12 +42,6 @@
 | :---: | :---: | :-----: |
 |  ✔️   |  ✔️   |   ✔️    |
 
-## 文档
-
-- [快速开始](https://leanflutter.dev/zh/documentation/screen_retriever/quick-start)
-- [API 参考](https://pub.dev/documentation/screen_retriever/latest/screen_retriever/)
-- [更新日志](https://pub.dev/packages/screen_retriever/changelog)
-
 ## 快速开始
 
 ### 安装
@@ -56,7 +50,7 @@
 
 ```yaml
 dependencies:
-  screen_retriever: ^0.2.0
+  screen_retriever: ^0.3.0
 ```
 
 或
@@ -66,74 +60,114 @@ dependencies:
   screen_retriever:
     git:
       url: https://github.com/leanflutter/screen_retriever.git
-      path: packages/screen_retriever
       ref: main
+```
+
+#### 要求
+
+- Flutter 3.47 / Dart 3.13 及以上，macOS 10.15 及以上。
+- Linux 构建机需要 GTK 3、X11 和 Xi 的开发包。
+
+```
+sudo apt-get install libgtk-3-dev libx11-dev libxi-dev
 ```
 
 ### 用法
 
 ```dart
-Display? _primaryDisplay;
-List<Display> _displayList = [];
+import 'package:screen_retriever/screen_retriever.dart';
 
-void _init() async {
-  _primaryDisplay = await screenRetriever.getPrimaryDisplay();
-  _displayList = await screenRetriever.getAllDisplays();
-  setState(() {});
+final displayManager = DisplayManager.instance;
+
+final primary = displayManager.getPrimary()!;
+print('${primary.name}: ${primary.size.toSize()} at ${primary.scaleFactor}x');
+print('work area: ${primary.workArea.toRect()}');
+
+for (final display in displayManager.getAll()) {
+  print('${display.id} ${display.name} at ${display.position.toOffset()}');
 }
+
+print('cursor: ${displayManager.getCursorPosition().toOffset()}');
+
+final listenerId = displayManager.addListener((event) {
+  switch (event) {
+    case DisplayAddedEvent(:final display):
+      print('added ${display.name}');
+    case DisplayRemovedEvent(:final display):
+      print('removed ${display.name}');
+    case DisplayChangedEvent(:final display):
+      print('changed ${display.name}');
+  }
+});
+// Later: displayManager.removeListener(listenerId);
 ```
 
-### 监听事件
+位置和尺寸都是逻辑像素，原点在主显示器的左上角。nativeapi 的 `Point`、`Size`、`Rectangle`
+没有导出，因为 Flutter 有自己的 `Size`：用 `toOffset()`、`toSize()`、`toRect()` 转成 Flutter 的类型。
+
+> 本插件的[示例应用](./example)演示的是兼容 0.2.x 的 API。
+
+#### 从 0.2.x 升级
+
+为 `screen_retriever` 0.2.x 写的代码，把 `package:screen_retriever/screen_retriever.dart`
+换成 `package:screen_retriever/legacy.dart` 即可继续使用。它在原生 API 之上提供原来的
+`screenRetriever`、`ScreenListener`、`Display` 和 `ScreenRetrieverPlatform`。
+
+需要改 import 是有意为之：`legacy.dart` 只是过渡，不是这个包的方向。其中的类都标记了
+`@Deprecated`，**会在之后的版本中移除**——请尽早迁移到上面的原生 API。
 
 ```dart
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+import 'package:screen_retriever/legacy.dart';
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> with ScreenListener {
-  @override
-  void initState() {
-    screenRetriever.addListener(this);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    screenRetriever.removeListener(this);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // ...
-  }
-
-  @override
-  void onScreenEvent(String eventName) {
-    String log = 'Event received: $eventName)';
-    print(log);
-  }
-}
+final primaryDisplay = await screenRetriever.getPrimaryDisplay();
+final displays = await screenRetriever.getAllDisplays();
+final cursor = await screenRetriever.getCursorScreenPoint();
 ```
 
-> 请看这个插件的示例应用，以了解完整的例子。
+与 0.2.x 的差异：
 
-## 谁在用使用它？
+- 构建需要 Flutter 3.47 / Dart 3.13 和 macOS 10.15（0.2.x：Flutter 3.3）。
+  `screen_retriever_platform_interface`、`_macos`、`_linux`、`_windows` 这些包不再使用。
+- `Display.id` 是 nativeapi 的显示器 ID 的文本形式。显示器保持连接期间不变，但重启应用或
+  重新连接后会变；0.2.x 在 macOS 和 Windows 上用的是平台自己的 ID，在 Linux 上是空字符串。
+- `visiblePosition` 和 `visibleSize` 在所有平台上都是工作区，即去掉菜单栏、任务栏或面板之后的区域。
+- Windows 上的尺寸不再取整，150% 缩放的显示器可能得到 `1706.67` 这样的逻辑像素值。
+- `ScreenListener` 除了 `display-added`、`display-removed`，还会收到 `display-changed`。
+- `MethodChannelScreenRetriever` 保留了名字，仍是默认的 `ScreenRetrieverPlatform`，但已经没有
+  method channel：它的 `methodChannel` 和 `eventChannel` 字段已移除。替换
+  `ScreenRetrieverPlatform.instance` 的测试照常可用。
+
+#### 迁移到原生 API
+
+| 0.2.x（`legacy.dart`） | 原生 API（`screen_retriever.dart`） |
+| --- | --- |
+| `await screenRetriever.getPrimaryDisplay()` | `DisplayManager.instance.getPrimary()`——同步调用，没有主显示器时为 `null` |
+| `await screenRetriever.getAllDisplays()` | `DisplayManager.instance.getAll()` |
+| `await screenRetriever.getCursorScreenPoint()` | `DisplayManager.instance.getCursorPosition().toOffset()` |
+| `display.id`（`String`） | `display.id`（`DisplayId`，即 `int`） |
+| `display.size` | `display.size.toSize()` |
+| `display.visiblePosition`、`display.visibleSize` | `display.workArea.toRect()` |
+| `display.name`、`display.scaleFactor` | 相同，实时读取 |
+| — | `display.position`、`isPrimary`、`orientation`、`refreshRate`、`bitDepth` |
+| `ScreenListener` 配合 `screenRetriever.addListener` | `DisplayManager.instance.addListener((event) { ... })`，返回的 ID 用于 `removeListener` |
+| `onScreenEvent('display-added')`、`'display-removed'` | `DisplayAddedEvent`、`DisplayRemovedEvent`、`DisplayChangedEvent`，各自带有 `display` |
+| `display.toJson()` | ——原生 `Display` 实时读取属性，需要保存的值请自行复制 |
+
+原生 `Display` 是系统显示器的句柄：从 `getAll()` 或 `getPrimary()` 拿到的用完后调用
+`dispose()`，或者交给垃圾回收。
+
+## 谁在使用它？
 
 - [Biyi (比译)](https://biyidev.com/) - 一个便捷的翻译和词典应用。
 
 ## API
 
-### ScreenRetriever
+### 原生 API
 
-| Method                 | Description                                   | Linux | macOS | Windows |
-| ---------------------- | --------------------------------------------- | ----- | ----- | ------- |
-| `getCursorScreenPoint` | 返回 `Offset` - 鼠标指针的当前绝对位置。      | ✔️    | ✔️    | ✔️      |
-| `getPrimaryDisplay`    | 返回 `Display` - 主显示屏。                   | ✔️    | ✔️    | ✔️      |
-| `getAllDisplays`       | 返回 `List<Display>` - 当前可用的显示器列表。 | ✔️    | ✔️    | ✔️      |
+`screen_retriever` 重新导出了 `nativeapi` 的显示器 API：`DisplayManager`、`Display`、
+`DisplayEvent` 及其子类、`DisplayId` 和 `DisplayOrientation`，以及 `nativeapi_flutter` 的
+`toOffset()`、`toSize()`、`toRect()` 转换。只有仍在使用 0.2.x API 的代码才需要 import
+`package:screen_retriever/legacy.dart`。
 
 ## 贡献者 ✨
 

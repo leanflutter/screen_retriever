@@ -7,3 +7,6 @@
 pubspec_overrides.yaml
 pubspec.lock
 build/
+
+# The leanflutter.dev pages, not part of the package.
+docs/

@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main, dev, next]
   pull_request:
-    branches: [main]
+    branches: [main, next]
 
 jobs:
   lint:
@@ -18,27 +18,22 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.44.1'
-          channel: 'stable'
+          flutter-version: '3.47.5'
+          channel: stable
           cache: true
 
-      - name: Install melos
-        run: dart pub global activate melos
-
-      - name: Add melos to PATH
-        run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
-
-      - name: Verify melos installation
-        run: dart pub global run melos --version
-
-      - name: Bootstrap melos
-        run: dart pub global run melos bootstrap
+      - name: Install dependencies
+        run: flutter pub get
 
       - name: Check code formatting
-        run: dart pub global run melos run format-check
+        run: dart format --set-exit-if-changed .
 
-      - name: Analyze code
-        run: dart pub global run melos run analyze
+      - name: Analyze package
+        run: flutter analyze
+
+      - name: Analyze example
+        run: flutter analyze
+        working-directory: example
 
   test:
     name: Test (${{ matrix.os }})
@@ -55,32 +50,40 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.44.1'
-          channel: 'stable'
+          flutter-version: '3.47.5'
+          channel: stable
           cache: true
 
-      - name: Install melos
-        run: dart pub global activate melos
-
-      - name: Add melos to PATH
-        shell: bash
+      # flutter test runs cnativeapi's build hook, which compiles the core
+      # against GTK 3, X11 and Xi on Linux.
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
         run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            echo "$USERPROFILE/.pub-cache/bin" >> $GITHUB_PATH
-          else
-            echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
-          fi
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libx11-dev libxi-dev pkg-config clang
 
-      - name: Verify melos installation
-        run: dart pub global run melos --version
-
-      - name: Bootstrap melos
-        run: dart pub global run melos bootstrap
+      - name: Install dependencies
+        run: flutter pub get
 
       - name: Run tests
-        run: dart pub global run melos run test
+        shell: bash
+        run: |
+          if [ -d test ]; then
+            flutter test
+          else
+            echo "No package tests to run."
+          fi
 
-  # Linux build
+      - name: Run example tests
+        shell: bash
+        run: |
+          if [ -d test ]; then
+            flutter test
+          else
+            echo "No example tests to run."
+          fi
+        working-directory: example
+
   build-linux:
     name: Build Linux
     runs-on: ubuntu-latest
@@ -93,31 +96,28 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.44.1'
-          channel: 'stable'
+          flutter-version: '3.47.5'
+          channel: stable
           cache: true
-
-      - name: Install melos
-        run: dart pub global activate melos
-
-      - name: Add melos to PATH
-        run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
-
-      - name: Bootstrap melos
-        run: dart pub global run melos bootstrap
 
       - name: Install Linux dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+            libgtk-3-dev \
+            libblkid-dev \
+            liblzma-dev \
+            pkg-config \
+            cmake \
+            ninja-build \
+            clang \
+            libx11-dev \
+            libxi-dev
 
-      - name: Build screen_retriever example Linux
-        run: |
-          cd packages/screen_retriever/example
-          flutter build linux --release
+      - name: Build example Linux
+        run: flutter build linux --release
+        working-directory: example
 
-  # macOS build
   build-macos:
     name: Build macOS
     runs-on: macos-latest
@@ -130,25 +130,14 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.44.1'
-          channel: 'stable'
+          flutter-version: '3.47.5'
+          channel: stable
           cache: true
 
-      - name: Install melos
-        run: dart pub global activate melos
+      - name: Build example macOS
+        run: flutter build macos --release
+        working-directory: example
 
-      - name: Add melos to PATH
-        run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
-
-      - name: Bootstrap melos
-        run: dart pub global run melos bootstrap
-
-      - name: Build screen_retriever example macOS
-        run: |
-          cd packages/screen_retriever/example
-          flutter build macos --release
-
-  # Windows build
   build-windows:
     name: Build Windows
     runs-on: windows-latest
@@ -161,21 +150,10 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.44.1'
-          channel: 'stable'
+          flutter-version: '3.47.5'
+          channel: stable
           cache: true
 
-      - name: Install melos
-        run: dart pub global activate melos
-
-      - name: Add melos to PATH
-        shell: bash
-        run: echo "$USERPROFILE/.pub-cache/bin" >> $GITHUB_PATH
-
-      - name: Bootstrap melos
-        run: dart pub global run melos bootstrap
-
-      - name: Build screen_retriever example Windows
-        run: |
-          cd packages/screen_retriever/example
-          flutter build windows --release
+      - name: Build example Windows
+        run: flutter build windows --release
+        working-directory: example
