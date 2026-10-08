@@ -130,6 +130,8 @@ final cursor = await screenRetriever.getCursorScreenPoint();
   `screen_retriever_platform_interface`、`_macos`、`_linux`、`_windows` 这些包不再使用。
 - `Display.id` 是 nativeapi 的显示器 ID 的文本形式。显示器保持连接期间不变，但重启应用或
   重新连接后会变；0.2.x 在 macOS 和 Windows 上用的是平台自己的 ID，在 Linux 上是空字符串。
+- Windows 上的 `name` 是显示器自己的名称（如 "DELL U2720Q"，Windows 没有名称时为
+  "Generic PnP Monitor"），不再是 `\\.\DISPLAY1`。
 - `visiblePosition` 和 `visibleSize` 在所有平台上都是工作区，即去掉菜单栏、任务栏或面板之后的区域。
 - Windows 上的尺寸不再取整，150% 缩放的显示器可能得到 `1706.67` 这样的逻辑像素值。
 - `ScreenListener` 除了 `display-added`、`display-removed`，还会收到 `display-changed`。

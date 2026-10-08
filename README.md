@@ -136,6 +136,8 @@ What differs from 0.2.x:
 - `Display.id` is nativeapi's display ID as text. It stays the same while the display
   is connected, but not across launches or reconnects; 0.2.x used the platform's
   own ID on macOS and Windows and an empty string on Linux.
+- `name` on Windows is the monitor's name ("DELL U2720Q", or "Generic PnP Monitor"
+  where Windows has none) instead of `\\.\DISPLAY1`.
 - `visiblePosition` and `visibleSize` are the work area — the display minus the
   menu bar, taskbar or panels — on every platform.
 - Sizes are no longer rounded on Windows, so a 150 % display can report

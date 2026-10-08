@@ -21,6 +21,8 @@ Windows and Linux.
   but is backed by nativeapi.
 * `Display.id` is the native display ID on every platform (it was empty on Linux),
   and `visiblePosition` / `visibleSize` are the work area everywhere (#16).
+* Windows: `Display.name` is the monitor's name ("DELL U2720Q", or "Generic PnP
+  Monitor" where Windows has none) instead of `\\.\DISPLAY1` (#19).
 * Listeners also get `display-changed`, and removing the last listener stops the
   event stream instead of subscribing to it again.
 
