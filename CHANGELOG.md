@@ -1,3 +1,7 @@
+## 0.3.1
+
+* Update `nativeapi` and `nativeapi_flutter` to 0.5.3.
+
 ## 0.3.0
 
 screen_retriever is now built on [nativeapi](https://pub.dev/packages/nativeapi): the
