@@ -2,6 +2,8 @@
 > Flutter binding of one C++ core library ([libnativeapi/nativeapi](https://github.com/libnativeapi/nativeapi))
 > shared by macOS, Windows and Linux. Coming from 0.2.x? See [Upgrading from 0.2.x](#upgrading-from-02x).
 
+> **Issues:** Please report bugs and feature requests in [nativeapi issues](https://github.com/libnativeapi/nativeapi/issues). Include the package name, version, operating system, and a minimal reproduction.
+
 # screen_retriever
 
 [![pub version][pub-image]][pub-url] [![][discord-image]][discord-url]
