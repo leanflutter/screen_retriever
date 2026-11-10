@@ -20,8 +20,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  nativeapi: ^0.5.3
-  nativeapi_flutter: ^0.5.3
+  nativeapi: ^0.5.8
+  nativeapi_flutter: ^0.5.8
   plugin_platform_interface: ^2.1.8
 
 dev_dependencies:
