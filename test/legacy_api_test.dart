@@ -126,4 +126,18 @@ void main() {
     expect(screenRetriever.hasListeners, isFalse);
     expect(platform.events.hasListener, isFalse);
   });
+
+  test('a listener added twice is notified once and removed once', () async {
+    final listener = _Mixed();
+    screenRetriever.addListener(listener);
+    screenRetriever.addListener(listener);
+
+    platform.events.add({'type': 'display-changed'});
+    await Future<void>.delayed(Duration.zero);
+    expect(listener.events, ['display-changed']);
+
+    screenRetriever.removeListener(listener);
+    expect(screenRetriever.hasListeners, isFalse);
+    expect(platform.events.hasListener, isFalse);
+  });
 }
