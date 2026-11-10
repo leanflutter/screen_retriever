@@ -1,6 +1,8 @@
 // The example shows the deprecated 0.2.x compatible API on purpose.
 // ignore_for_file: deprecated_member_use
 
+import 'dart:async';
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:screen_retriever/legacy.dart';
@@ -56,12 +58,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with ScreenListener {
   Display? _primaryDisplay;
   List<Display> _displayList = [];
+  String? _loadError;
 
   @override
   void initState() {
-    screenRetriever.addListener(this);
     super.initState();
-    _getDisplays();
+    screenRetriever.addListener(this);
+    unawaited(_getDisplays());
   }
 
   @override
@@ -73,18 +76,67 @@ class _HomePageState extends State<HomePage> with ScreenListener {
   @override
   void onScreenEvent(String eventName) {
     BotToast.showText(text: 'onScreenEvent: $eventName');
-    _getDisplays();
+    unawaited(_getDisplays());
   }
 
   Future<void> _getDisplays() async {
-    _primaryDisplay = await screenRetriever.getPrimaryDisplay();
-    _displayList = await screenRetriever.getAllDisplays();
-    setState(() {});
+    Display? primary;
+    List<Display> displays = [];
+    String? error;
+    try {
+      primary = await screenRetriever.getPrimaryDisplay();
+      displays = await screenRetriever.getAllDisplays();
+    } catch (e) {
+      // The primary display can briefly be missing while a monitor is unplugged.
+      error = e.toString();
+    }
+    if (!mounted) return;
+    setState(() {
+      _primaryDisplay = primary;
+      _displayList = displays;
+      _loadError = error;
+    });
   }
 
   Future<void> _handleGetCursorScreenPoint() async {
-    Offset point = await screenRetriever.getCursorScreenPoint();
-    BotToast.showText(text: 'cursorScreenPoint: $point');
+    try {
+      final point = await screenRetriever.getCursorScreenPoint();
+      BotToast.showText(text: 'cursorScreenPoint: $point');
+    } catch (error) {
+      BotToast.showText(text: 'getCursorScreenPoint failed: $error');
+    }
+  }
+
+  Future<void> _handleGetPrimaryDisplay() async {
+    try {
+      final primary = await screenRetriever.getPrimaryDisplay();
+      if (!mounted) return;
+      setState(() {
+        _primaryDisplay = primary;
+        _loadError = null;
+      });
+      BotToast.showText(text: 'primaryDisplay: ${primary.toJson()}');
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _loadError = error.toString());
+    }
+  }
+
+  Future<void> _handleGetAllDisplays() async {
+    try {
+      final displays = await screenRetriever.getAllDisplays();
+      if (!mounted) return;
+      setState(() {
+        _displayList = displays;
+        _loadError = null;
+      });
+      BotToast.showText(
+        text: 'allDisplays:\n${displays.map((e) => e.toJson()).join('\n')}',
+      );
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _loadError = error.toString());
+    }
   }
 
   Widget _buildPrimaryDisplay(BuildContext context) {
@@ -120,26 +172,13 @@ class _HomePageState extends State<HomePage> with ScreenListener {
         Card(
           child: ListTile(
             title: const Text('getPrimaryDisplay'),
-            onTap: () async {
-              _primaryDisplay = await screenRetriever.getPrimaryDisplay();
-              setState(() {});
-              BotToast.showText(
-                text: 'primaryDisplay: ${_primaryDisplay!.toJson()}',
-              );
-            },
+            onTap: _handleGetPrimaryDisplay,
           ),
         ),
         Card(
           child: ListTile(
             title: const Text('getAllDisplays'),
-            onTap: () async {
-              _displayList = await screenRetriever.getAllDisplays();
-              setState(() {});
-              BotToast.showText(
-                text:
-                    'allDisplays:\n${_displayList.map((e) => e.toJson()).join('\n')}',
-              );
-            },
+            onTap: _handleGetAllDisplays,
           ),
         ),
       ],
@@ -150,6 +189,7 @@ class _HomePageState extends State<HomePage> with ScreenListener {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: <Widget>[
+        if (_loadError != null) Text('Could not read displays: $_loadError'),
         _buildPrimaryDisplay(context),
         _buildAllDisplays(context),
         _buildMethods(context),
