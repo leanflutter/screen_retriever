@@ -3,13 +3,14 @@ description: screen_retriever through its 0.2.x compatible API.
 publish_to: "none"
 
 environment:
-  sdk: ^3.13.0
+  sdk: ^3.14.0
 
 dependencies:
   bot_toast: ^4.1.3
   flutter:
     sdk: flutter
 
+  material_ui: ^1.11.0
   screen_retriever:
     # When depending on this package from a real application you should use:
     #   screen_retriever: ^x.y.z

@@ -14,14 +14,14 @@ topics:
   - monitor
 
 environment:
-  sdk: ^3.13.0
-  flutter: ">=3.47.0"
+  sdk: ^3.14.0
+  flutter: ">=3.50.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  nativeapi: ^0.5.3
-  nativeapi_flutter: ^0.5.3
+  nativeapi: ^0.6.0
+  nativeapi_flutter: ^0.6.0
   plugin_platform_interface: ^2.1.8
 
 dev_dependencies:

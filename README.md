@@ -68,7 +68,7 @@ dependencies:
 
 #### Requirements
 
-- Flutter 3.47 / Dart 3.13 or later, macOS 10.15 or later.
+- Flutter 3.50 / Dart 3.14 or later, macOS 10.15 or later.
 - Linux build machines need GTK 3, X11 and Xi development files.
 
 ```
@@ -132,7 +132,7 @@ final cursor = await screenRetriever.getCursorScreenPoint();
 
 What differs from 0.2.x:
 
-- Builds need Flutter 3.47 / Dart 3.13 and macOS 10.15 (0.2.x: Flutter 3.3). The
+- Builds need Flutter 3.50 / Dart 3.14 and macOS 10.15 (0.2.x: Flutter 3.3). The
   `screen_retriever_platform_interface`, `_macos`, `_linux` and `_windows` packages
   are no longer used.
 - `Display.id` is nativeapi's display ID as text. It stays the same while the display

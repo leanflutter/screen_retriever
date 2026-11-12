@@ -67,7 +67,7 @@ dependencies:
 
 #### 要求
 
-- Flutter 3.47 / Dart 3.13 及以上，macOS 10.15 及以上。
+- Flutter 3.50 / Dart 3.14 及以上，macOS 10.15 及以上。
 - Linux 构建机需要 GTK 3、X11 和 Xi 的开发包。
 
 ```
@@ -128,7 +128,7 @@ final cursor = await screenRetriever.getCursorScreenPoint();
 
 与 0.2.x 的差异：
 
-- 构建需要 Flutter 3.47 / Dart 3.13 和 macOS 10.15（0.2.x：Flutter 3.3）。
+- 构建需要 Flutter 3.50 / Dart 3.14 和 macOS 10.15（0.2.x：Flutter 3.3）。
   `screen_retriever_platform_interface`、`_macos`、`_linux`、`_windows` 这些包不再使用。
 - `Display.id` 是 nativeapi 的显示器 ID 的文本形式。显示器保持连接期间不变，但重启应用或
   重新连接后会变；0.2.x 在 macOS 和 Windows 上用的是平台自己的 ID，在 Linux 上是空字符串。

@@ -23,7 +23,7 @@ dependencies:
 
 ### 要求
 
-- Flutter 3.47 / Dart 3.13 及以上，macOS 10.15 及以上。
+- Flutter 3.50 / Dart 3.14 及以上，macOS 10.15 及以上。
 - Linux 构建机需要 GTK 3、X11 和 Xi 的开发包。
 
 ```
