@@ -82,11 +82,19 @@ import 'package:screen_retriever/screen_retriever.dart';
 final displayManager = DisplayManager.instance;
 
 final primary = displayManager.getPrimary()!;
-print('${primary.name}: ${primary.size.toSize()} at ${primary.scaleFactor}x');
-print('work area: ${primary.workArea.toRect()}');
+try {
+  print('${primary.name}: ${primary.size.toSize()} at ${primary.scaleFactor}x');
+  print('work area: ${primary.workArea.toRect()}');
+} finally {
+  primary.dispose();
+}
 
 for (final display in displayManager.getAll()) {
-  print('${display.id} ${display.name} at ${display.position.toOffset()}');
+  try {
+    print('${display.id} ${display.name} at ${display.position.toOffset()}');
+  } finally {
+    display.dispose();
+  }
 }
 
 print('cursor: ${displayManager.getCursorPosition().toOffset()}');
