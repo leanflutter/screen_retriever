@@ -8,7 +8,7 @@
 
 ```yaml
 dependencies:
-  screen_retriever: ^0.3.1
+  screen_retriever: ^0.4.0
 ```
 
 或
