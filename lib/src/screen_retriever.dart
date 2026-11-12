@@ -25,10 +25,24 @@ class ScreenRetriever {
   StreamSubscription<Map<Object?, Object?>>? _subscription;
 
   void _handleScreenEvent(Map<Object?, Object?> event) {
-    final type = event['type'] as String?;
-    if (type == null) return;
+    final type = event['type'];
+    if (type is! String) return;
     for (final listener in List<ScreenListener>.of(_listeners)) {
-      listener.onScreenEvent(type);
+      // A callback may have removed this listener during this notification.
+      if (!_listeners.contains(listener)) continue;
+      try {
+        listener.onScreenEvent(type);
+      } catch (error, stackTrace) {
+        // Keep notifying the other listeners, as ChangeNotifier does.
+        FlutterError.reportError(
+          FlutterErrorDetails(
+            exception: error,
+            stack: stackTrace,
+            library: 'screen_retriever',
+            context: ErrorDescription('while notifying a ScreenListener'),
+          ),
+        );
+      }
     }
   }
 
@@ -38,9 +52,15 @@ class ScreenRetriever {
 
   void addListener(ScreenListener listener) {
     _listeners.add(listener);
-    _subscription ??= _platform.onScreenEventReceiver.listen(
-      _handleScreenEvent,
-    );
+    try {
+      _subscription ??= _platform.onScreenEventReceiver.listen(
+        _handleScreenEvent,
+      );
+    } catch (_) {
+      // Do not keep a listener that will never be notified.
+      _listeners.remove(listener);
+      rethrow;
+    }
   }
 
   void removeListener(ScreenListener listener) {
