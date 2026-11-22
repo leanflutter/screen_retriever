@@ -1,3 +1,14 @@
+## 0.4.1
+
+* Require nativeapi and nativeapi_flutter 0.6.2 or later.
+* **Breaking for duplicate legacy listener registrations:** Register each
+  screen listener only once. One
+  `removeListener()` call now removes it, even after repeated registration.
+* Keep notifying legacy screen listeners when another listener throws, and
+  ignore malformed platform events.
+* Handle display read failures and late results in the example, and dispose
+  native display handles in the quick-start examples.
+
 ## 0.4.0
 
 * **Breaking:** requires Flutter 3.50 / Dart 3.14, nativeapi 0.6.0 and nativeapi_flutter 0.6.0.
