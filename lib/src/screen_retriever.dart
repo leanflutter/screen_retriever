@@ -51,6 +51,9 @@ class ScreenRetriever {
   }
 
   void addListener(ScreenListener listener) {
+    // A listener registered twice would get every event twice and need two
+    // removeListener() calls.
+    if (_listeners.contains(listener)) return;
     _listeners.add(listener);
     try {
       _subscription ??= _platform.onScreenEventReceiver.listen(
